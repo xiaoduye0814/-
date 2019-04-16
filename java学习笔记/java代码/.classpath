@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="day"/>
+	<classpathentry kind="src" path="day13"/>
+	<classpathentry kind="src" path="day14"/>
+	<classpathentry kind="src" path="day15"/>
+	<classpathentry kind="src" path="day16"/>
+	<classpathentry kind="src" path="day17"/>
+	<classpathentry kind="src" path="day18"/>
+	<classpathentry kind="src" path="day5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="src" path="day19"/>
+	<classpathentry kind="src" path="day20"/>
+	<classpathentry kind="src" path="day21"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
