@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!-- 检察院名称  -->
+	<parser name="JBJCY" nameCN="可能检察院名称">
+		<searchers>
+			<searcher>
+				<patternid>段_检院名称</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="JCYMC" nameCN="检察院名称" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^(?:中华人民共和国)?(.+)$</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 文书类型 -->
+	<parser name="WSLX" nameCN="文书类型" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 文书编号 -->
+	<parser name="WSBH" nameCN="文书编号" keepValue="true">
+		<searchers>
+			<!-- 检时间在案号中间。检2时间在案号开始部分-->
+			<searcher>
+				<patternid>段_案号_检</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号_检2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 案件类别 -->
+	<parser name="KNAJLB" nameCN="可能案件类别">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="AJLB" nameCN="案件类别" keepValue="true">
+				<searchers>
+					<searcher>
+						<patternid>审查起诉案件</patternid>
+						<result>审查起诉案件</result>
+					</searcher>
+					<searcher>
+						<patternid>审查逮捕案件</patternid>
+						<result>审查逮捕案件</result>
+					</searcher>
+					<searcher>
+						<patternid>上诉及审判监督案件</patternid>
+						<result>上诉及审判监督案件</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 办理部门 -->
+	<parser name="BLBMFW" nameCN="办理部门范围">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="BLBM" nameCN="办理部门" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(((?:(?:刑事附带民事|补充)?起诉|不起诉(?:决定)?|公诉|(?:刑事抗诉)|不(?:立案|予?逮捕)决定)书)|(?:(?&lt;!民事|行政|民事行政)(检察)?提请抗诉报告)书\r\n.*刑.*\r\n)</pattern>
+						<result>公诉部门</result>
+					</searcher>				
+					<searcher>
+						<pattern>(?:(?:(?:民事|行政)抗诉)|不(?:立案|予?逮捕)决定|(?:(?:(?:民事|行政|民事行政)?检察)?提请抗诉报告))书</pattern>
+						<result>民行部门</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:(?:审查逮捕(?:案件)?意见))书</pattern>
+						<result>侦查监督部门</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 文书日期 -->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="WSRQ" nameCN="文书日期" keepValue="true">
+				<searchers>
+					<searcher>
+						<!--年月日-->
+						<pattern>\#年月日\#</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<!--年月-->
+						<pattern>\#年月\#</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+</parsers>

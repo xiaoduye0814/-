@@ -1,0 +1,1076 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!--
+	<include file="Ext_WritInfo" /> 
+	-->
+	<!--文书标题-->
+	<parser name="WSBT_QIANLIANGHANG" nameCN="文书标题"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>^(?:.*\n){0,4}?(.+书)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--车牌号码 -->
+	<!--<parser name="CPHM" nameCN="车牌号码" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>((?:[京沪渝津冀黑吉辽晋青鲁豫苏皖浙闽赣湘鄂粤琼宁甘陕藏新桂蒙川贵云])\#车牌分隔符\#?[A-Z\d]\#车牌分隔符\#?[A-Z\d]{4}[警学挂A-Z\d])(?![A-Za-z\d])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>((?:[京沪渝津冀黑吉辽晋青鲁豫苏皖浙闽赣湘鄂粤琼宁甘陕藏新桂蒙川贵云])\#车牌分隔符\#?[\d]{2}\#车牌分隔符\#?[A-Z\d]{5})(?![A-Za-z\d])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>((?:军|北|南|沈|兰|广|济|成|空|海)[A-Z\d]\#车牌分隔符\#?[A-Z\d]{4}[警学挂A-Z\d])(?![A-Za-z\d])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>((?:WJ\d{2})\#车牌分隔符\#?[A-Z\d消|边|通|森|金|警|电][A-Z\d]{3}[警学挂A-Z\d])(?![A-Za-z\d])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--组织机构代码 -->
+	<parser name="ZZJGDM" nameCN="组织机构代码" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;!\w)组织机构代码[为是系：:\x{0020}]*(\w{8}-?\w)(?!\w)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--在全文中提取 银行账号-->
+	<!--<parser name="YHZH" nameCN="银行账号"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>号码[为|是]?([\d]{9,20}(?:[、与和][\d]{9,20})*)的(?:银行|储蓄|信用|[借贷]记)卡</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>[卡账帐][户号]{0,2}(?:分别)?[为|是]?[:：]?([\d]{9,20}(?:[、与和][\d]{9,20})*)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>的([\d]{9,20}(?:[、与和][\d]{9,20})*)[卡账帐][户号]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--在全文中提取 网络虚拟账号 -->
+	<parser name="WLXNZH" nameCN="网络虚拟账号" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--pattern>((?i:qq|e\-?mail|skype|微信|微博|淘宝|邮箱)(?:号?码?|账号))[:：（(]?([\w@.]+(?:、[\w@.]+)*)</pattern-->
+				<pattern>(?:(?:淘宝|支付宝|网站|微博)(?:号?码?|[账帐]号|[账帐]户|用?户名))[:：是为系（(]?([\w@.]+(?:、[\w@.]+)*)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:(?:[账帐][号户]{1,2}|用?户名)[号码]+)[:：是为系（(]?([a-zA-Z][a-zA-Z\d\-._]*|(\w)+(\.\w+)*@(\w)+((\.\w+)+))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="WLXNTXFS" nameCN="网络通讯方式" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:(?i:qq|e\-?mail|skype|msn|(?:电子)?邮箱)(?:号?码?|账号))[:：（(]?([\w@.]+(?:、[\w@.]+)*)</pattern>
+				<result>$1</result>
+			</searcher>
+			<!--把微信单独拿出来是因为微信账号可以是很多字符 -->
+			<searcher>
+				<pattern>(?:微信(?:号?码?|[账帐]号))[是为系:：（(]?(?!聊天记录|照片)([a-zA-Z\d\-\x{4E00}-\x{9FA5}]+?)[,；.，。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--  检查员姓名 -->
+	<parser name="JCYNAME" nameCN="检察员姓名" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:检\s*察\s*员|书\s*记\s*员)[:：\s]*((?:[A-Za-z·•]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]|\s){2,}?)(?=代\s*理\s*检\s*察\s*员|书\s*记\s*员|检\s*察\s*员|\n)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:检\s*察\s*员|书\s*记\s*员)[:：\s]*(?:[A-Za-z·•]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]|\s){2,}?((?:[\r\n]+[a-zA-Z\x{4E00}-\x{9FA5} ]{2,5})+)(?=[\n\r])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--在全文中判断涉密类型，如果发现“国家秘密”字眼，就判断为国家秘密，如果发现“商业秘密”的字眼，判断为商业秘密-->
+	<!--<parser name="MMLX" nameCN="秘密类型"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>国家秘密|((((组织|领导|参加)、?)*恐怖组织罪|资助恐怖活动罪)|背叛国家罪|分裂国家罪|煽动分裂国家罪|武装(叛乱|暴乱)罪|颠覆国家政权罪|煽动颠覆国家政权罪|与境外勾结的处罚规定|资助危害国家安全犯罪活动罪|投敌叛变罪|叛逃罪|间谍罪|(为境外((窃取|刺探|收买|非法提供)、?)国家((秘密|情报)、?)罪)|资敌罪)</pattern>
+				<result>国家秘密</result>
+			</searcher>
+			<searcher>
+				<pattern>商业秘密</pattern>
+				<result>商业秘密</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--在不批准逮捕决定书中提取 犯罪嫌疑人 -->
+	<parser name="FZXYR_BPZDBJDS" nameCN="犯罪嫌疑人_不批准逮捕决定书"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>提请批准逮捕犯罪嫌疑人((?:[A-Za-z\x{4E00}-\x{9FA5}]{2,10}[·•、 ]){0,3}(?:[A-Za-z\x{4E00}-\x{9FA5}]{2,10}))\x{007f}*(?:[(（][A-Za-z\x{4E00}-\x{9FA5} ]*[)）])?\s*[,，。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<searchers>
+			<searcher>
+				<pattern>提请批准逮捕犯罪嫌疑人[A-Za-z\x{4E00}-\x{9FA5}\x{007f}\s]*[(（]([A-Za-z\x{4E00}-\x{9FA5} ]*)[)）]\s*[,，。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--在不立案通知书中提取 犯罪嫌疑人-->
+	<parser name="FZXYR_BLATZS" nameCN="犯罪嫌疑人_不立案通知书"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>控告[\s]*\#多个人名\#[\s]*涉嫌</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>	<!--在不立案通知书中提取 犯罪嫌疑人-->
+	<parser name="FZXYR_CXAJJDS" nameCN="犯罪嫌疑人_撤销案件决定书"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>我院(?:办理|审查起诉)的?(?:犯罪嫌疑人)?(?!\#非姓名起始\#)\#多个人名\#(?:\#案由起始\#)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提取 自然人身份证号码-->
+	<!--<parser name="ZRRSFZHM" nameCN="自然人身份证号码"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:护照号|军官证号|士兵证号|警官证号|工作证号|户口簿号|其他证件号|律师执业证号)码?[是为]?[:：,，]?([\dXxA-Z]{1,})[,，\.。；）);]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:公民|居民)?身份证?[件]?号码?[是为]?[:：,，]?([\dXx]{18}|[\dXx]{15})[^\da-zA-Z]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+	<parser name="JDR" nameCN="鉴定人" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--pattern>(?&lt;!被)鉴定人(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及]|以及|伙同|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:（均?系?(.+?)）)?(?:[，。（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认)</pattern-->
+				<pattern>(?:鉴定人员?)[:：\s]?(?!员?名单)(((?:[A-Za-z·•、]|[^等与的犯罪证（），\x{0000}-\x{4DFF}\x{9FA6}]|\s){2,}?)+)等?[,;,，；。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="KYRY" nameCN="勘验人员" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--pattern>勘验人员?(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及]|以及|伙同|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:（均?系?(.+?)）)?(?:[，。（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认)</pattern-->
+				<pattern>(?:勘验人员?)[:：\s]?(((?:[A-Za-z·•、]|[^等与的犯罪证（），\x{0000}-\x{4DFF}\x{9FA6}]|\s){2,}?)+)等?[,;,，；。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="FYRY" nameCN="翻译人员" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--pattern>翻译人员?(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及]|以及|伙同|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:（均?系?(.+?)）)?(?:[，。（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认)</pattern-->
+				<pattern>(?:翻译人员?)[:：\s]?(((?:[A-Za-z·•、]|[^等与的犯罪证（），\x{0000}-\x{4DFF}\x{9FA6}]|\s){2,}?)+)等?[,;,，；。]</pattern>
+			<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+	<parser name="BEIHR" nameCN="被害人" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[被受]害人(?!经济)(?!\#非姓名起始\#)\#多个人名\#(?:等人|\#非姓名起始\#|。)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:(盗窃|窃取)[被受]害人)(?!\#非姓名起始\#)[:：\s]?((?:[A-Za-z·•、.（）()，,\d\x{4E00}-\x{9FA5}]){2,}?)(?:等物。)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:(?:盗窃|窃取)[被受]害人)(?!\#非姓名起始\#)[:：\s]?((?:[A-Za-z·•、.（）()\d\x{4E00}-\x{9FA5}]){2,}?)(?:[,，]|\#非姓名起始\#)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>造成(?!经济)(?:站在路边的行人)?((?!\#非姓名起始\#)\#多个人名\#)(?:当场)?死亡</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[被受]害人)[:：\s]?(?!\#非姓名起始\#)(((?:[A-Za-z·•、]|[^等与的犯罪证（），\x{4E00}-\x{9FA5}]|\s){2,}?)+)的</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+	<!--<parser name="BEIHR1" nameCN="被害人1" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[被受]害人(?!经济)(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、与及]|以及|伙同|联[合手]|串通|勾结|和(?!解))([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:(?:（(.+?)）)|的?+(?:证言|陈述)|[均都]?系被|超生|拘禁|发生争执|手机|住所|向本院|[将所]?驾驶|的?近?亲属|的?之?(?:系(?:同胞)?)?([父母]亲?|(曾?祖|[继岳])?[父母]|[玄曾外]孙[子女媳]|(?:丈?夫|妻子?)|[长次]?[子女孙兄嫂]|[大小二三四五六]([儿孙][子媳]|女儿?)|[二三四五六七八九十]?(爷爷|奶奶|姥[姥爷]|外婆|婆婆|伯[伯父母]?|[堂表]?(兄|哥哥?|姐[姐夫]?|弟[弟妹媳]?|妹[妹夫]|(?&lt;=[二三四五六七八九十])妹|叔[叔父母]?|舅[舅爷母妈]?|姑[姑父丈]?|姨[姨父丈]?|婶[婶子]?|嫂子?))))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="BEIHR2" nameCN="被害人2" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[被受]害人(?!经济)(?!\#非姓名起始\#)\#多个人名\#(?:等人|\#非姓名起始\#|。)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="BEIHR3" nameCN="被害人3" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:窃取[被受]害人)[:：\s]?((?:[A-Za-z·•、.（）()，,\d\x{4E00}-\x{9FA5}]){2,})等物。</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--<parser name="BHDW" nameCN="被害单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[被受]害单位([:：]?.{1,20}(\#单位后缀\#|\#单位后缀_单位\#))[，,。.（]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--<parser name="DGDW" nameCN="多个单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>、((?:[A-Za-z\x{4E00}-\x{9FA5}()（）]{2,20}(?:公司|集团|中心|[院所部厅局园馆厂矿场]|[大中小]学|俱乐部|加油站|网吧|供销社|协会|工作室)、){3,}(?:[A-Za-z\x{4E00}-\x{9FA5}()（）]{2,20}(?:公司|集团|中心|[院所部厅局园馆厂矿场]|[大中小]学|俱乐部|加油站|网吧|供销社|协会|工作室))?)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[骗套][取得]|诈骗(?!罪))((?:[A-Za-z\x{4E00}-\x{9FA5}()（）]{2,20}(?:公司|集团|中心|[院所部厅局园馆厂矿场]|[大中小]学|俱乐部|加油站|网吧|供销社|协会|工作室)、)+)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--<parser name="BHDW" nameCN="被不起诉单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被不起诉单位([:：]?.{1,20}(\#单位后缀\#|\#单位后缀_单位\#))[，,。.（]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+	<parser name="BIANHR" nameCN="辩护人" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--pattern>辩护人(?:[^,.，。、]+律师事务所(?:律师)?)?(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与]|以及|伙同|及其?|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:[，。、（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|出具)</pattern-->
+				<!--pattern>辩护人[,，]?(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与]|以及|伙同|及其?|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:[，,。、（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|出具)(?!([^,.，。、]{0,}律师事务所(?:律师)?))</pattern-->
+			<pattern>fa</pattern>
+			<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="BBQSR" nameCN="被不起诉人"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=^|\n)(?:原案)?被(?:附条件)?不起诉人(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及](?!其)|以及|伙同|联[合手]|串通|勾结)(?!\#非姓名起始\#)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:（[均都]?系?(.+?)）)?(?:受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|\#非姓名起始\#|[，。（）等的犯罪])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:原案)?被(?:附条件)?不起诉人(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及](?!其)|以及|伙同|联[合手]|串通|勾结)(?!\#非姓名起始\#)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}\x{FB50}-\x{FEFC}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:（[均都]?系?(.+?)）)?(?:受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|\#非姓名起始\#|[，。（）等的犯罪])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提示：此处提出的证人姓名可能是以逗号或顿号分割的，用的时候要再进行处理，例如：“卜庆有、李正科”-->
+	<parser name="FDDLR" nameCN="法定代理人" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>法定代理人(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与及]|以及|伙同|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:[，。（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|出具)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>法定代理人(?!\#非姓名起始\#)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})的谅解</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提取后面这种情况的法定代理人：法定代理人王占廷王某乙，男，45岁，广州务工；梁淑芳，女，38岁，原籍无业。-->
+	<parser name="FDDLRD" nameCN="法定代理人段">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=^|\n)法定代理人([\S]+)\n</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="FDDLR2" nameCN="法定代理人2" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:法定代理人|;|；)((?:[A-Za-z·• ]|[^等拘禁与犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}【】；,.;?？‘，。、 {}:]{1,6}))[,，][男女]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!--在不立案通知书中提取 控告人-->
+	<parser name="KGR" nameCN="控告人"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>控告单位或控告人[\s]*((?:[A-Za-z ]|[\x{4E00}-\x{9FA5}]){2,10})</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+		<!--提取犯罪嫌疑人-->
+	<parser name="FZXYR" nameCN="犯罪嫌疑人"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:犯罪嫌疑人)[:：](?!\#非姓名起始\#)((?:[A-Za-z·• ]|[^等拘禁与犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}【】；,.;?？‘，。、 {}:]{1,6}))[,，]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--<parser name="DWJC" nameCN="单位简称" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:(?:以下)?简称[:：]?)["“”]?([\w\d\x{4E00}-\x{9FA5}]+(?:\#单位后缀_单位\#))["“”]?</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--<parser name="SHSDW" nameCN="申诉单位"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=^|\n)申诉(?:代理)?人[:：]?((?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){4,})(?&lt;=\#单位后缀\#)[,，]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>以申诉人[:：]?((?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){2,}?)(?&lt;=\#单位后缀\#)[,，因]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--<parser name="GZDW" nameCN="工作单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[,，])(?:原系?|[原兼]?[系任]|(?:案发|被?捕)[时前][为系]|冒充)?(?!\#非单位起始\#)(?!(?:[\w\d\x{4E00}-\x{9FA5}（）()]{1,25}(?:律师事务所|法律援助中心)))((?:[A-Za-z\x{4E00}-\x{9FA5}、](?!\#非单位起始\#)){1,30}?(?:[（〈(〔［].{0,4}?[）〉)〕］])?(?:[A-Za-z\x{4E00}-\x{9FA5}](?!\#非单位起始\#)){1,27}?(?:\#单位_部门\#)?)(?&lt;!的|任|安排|开展|出租车)(退休|原)?(?:[（〈(〔［].{0,}?[）〉)〕］])?(\#职务\#|\#身份\#|工作人员)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[,，、])(?:原系?|[原兼]?[系任]|(?:案发|被?捕)[时前][为系]|冒充)(?!\#非单位起始\#)(?!(?:[\w\d\x{4E00}-\x{9FA5}（）()]{1,25}(?:律师事务所|法律援助中心)))((?:[A-Za-z\x{4E00}-\x{9FA5}、](?!\#非单位起始\#)){1,30}?(?:[（〈〔［].{0,4}?[）〉〕］])?(?:[A-Za-z\x{4E00}-\x{9FA5}](?!\#非单位起始\#)){1,12}?(?:\#单位_部门\#)?)(?&lt;!的|任|安排|开展)(退休|原)?(?:[（〈(〔［].{0,}?[）〉)〕］])?(\#职务\#|\#身份\#|工作人员)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>工作单位(?!地址)[是为系：]?([a-zA-Z\d\x{4E00}-\x{9FA5}]{1,30})[，。,.;；]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>现在在?([\w\d\x{4E00}-\x{9FA5}]{1,12}?(?:[（〈(〔［].{0,4}?[）〉)〕］])?[\w\d\x{4E00}-\x{9FA5}]{1,12}?)(?:\#单位_部门\#)?工作[，。,.;；]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>经营的?(?!的?位于|行为)((?:[\x{4E00}-\x{9FA5}](?&lt;!销给))+?)(?&lt;=\#单位后缀\#)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[,，、]|[担接]任|作为)(?!\#非单位起始\#)((?:[A-Za-z\x{4E00}-\x{9FA5}《》](?!\#非单位起始\#)){2,20}(?:\#单位后缀\#))(?:\#职务\#)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:原?[系为任])(?!\#非单位起始\#)(?!(?:[\w\d\x{4E00}-\x{9FA5}（）()]{1,25}(?:律师事务所|法律援助中心)))([\w\d\x{4E00}-\x{9FA5}]{1,12}?(?:[（〈〔［].{0,4}?[）〉〕］])?[\w\d\x{4E00}-\x{9FA5}]{1,12}?)(?:\#单位_部门\#)?(?&lt;!的|任|安排|开展)(退休|原)?(?:[（〈(〔［].{0,}?[）〉)〕］])?(\#职务\#|\#身份\#)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--<parser name="GZDW_ZHIWU" nameCN="工作单位_职务" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[,，])(?:原系?|系|案发[时前][为系])?(?![并因由]|任命|负责|其中)([\w\d\x{4E00}-\x{9FA5}]{1,12}?(?:[（〈(〔［].{0,4}?[）〉)〕］])?[\w\d\x{4E00}-\x{9FA5}]{1,27}?)(?:\#单位_部门\#)?(?&lt;!的|任|安排|开展)(?:[（〈(〔［].{0,}?[）〉)〕］])?(?:退休|原)?(\#职务\#|\#身份\#)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$2</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[,.，。、（(])(\#职务\#|\#身份\#)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:\#单位后缀\#)(?&lt;!的|任|安排|开展)(?:退休)?(\#职务\#|\#身份\#)(?&lt;![居农]民)(?=[,.，。、（(])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:[担时曾]任|[,，、]|劳务派遣[至到]|作为)([A-Za-z\x{4E00}-\x{9FA5}《》]{2,20}(?:\#单位后缀\#))(?:任|担任)?((?:\#职务\#[、及])?(?:\#职务\#))</pattern>
+				<result>$2</result>
+			</searcher>
+			<searcher>
+				<pattern>[、（）()]\#职务\#[,.，。；（）;]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>[、（）()](经理)[,.，。；（）;]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>村(?:委会|民委员会)?(主任|(?:党?支部)?书记)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="FAKE_NAME" nameCN="别名" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:曾用名|绰[号名]|外号|英文名|[化别冒又乳假]名)叫?[:：]?(?:["“”]?\#多个人名\#[,"“”，)）]、)*["“”]?\#多个人名\#[,"“”，)）]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>["“”]\#多个人名\#["“”](?:[（〈(〔［]姓名不详[）〉)〕］])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?&lt;=^|\n)(?:原[审案](?:附带民事诉讼)?)?(被告人|被不起诉人)(?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){2,6}+[（(]([a-zA-Z ]+)[)）][,，][男女]</pattern>
+				<result>$2</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提取诉讼代理人-->
+	<parser name="SSDLR" nameCN="诉讼代理人"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>诉讼代理人[是为:：，,]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[^，。本人逃匿逸及或等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(本人|逃匿|逃逸)?[(,，。;；：:](?!([^,.，。、]{0,}律师事务所(?:律师)?))</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>诉讼代理人[是为:：，,]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[^，。本人逃匿逸及或等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(?:的意见)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+				<!--提取 被申诉人-->
+	<parser name="BEISHSR" nameCN="被申诉人"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被申诉人?(?:[(（]原案被不起诉人[）)])?(?:代理)?人?[:：]?(\#中英人名\#)[(（,，。]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+			<!--提取 被告单位-->
+	<!--<parser name="BGDW" nameCN="被告单位"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被告(?:单位)?[:：]?((?:(?:(?:[A-Za-z·]|[^，,(降低|被告人)等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}])+?(?:公司|集团|中心|大队|[院所厅局处科园馆店厂矿场会台狱庭组]|[大中小]学|机关|高中|(?&lt;!(?&lt;!安)全)部))[、]?){1,8})</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="BGR_LEIFAN_DUAN" nameCN="累犯被告人段" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被告人[,，、\x{4E00}-\x{9FA5}a-zA-Z()（）]+(?:在本案中)?[均都]?[系是][累惯]犯</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="BGR_LEIFAN" nameCN="被告人_累惯犯" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#(?&lt;!因)涉嫌</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#因涉嫌</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(\#多个人名\#)(?:在本案中)?[均都]?系[累惯]+犯</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(?:自报(?:身份|姓名)?)?((?!\#非姓名起始\#)\#人名\#)[,，(（]</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(?!\#非姓名起始\#)(\#人名\#)(?:曾?因|在?有期徒刑|在?刑罚执行完)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="TAF" nameCN="同案犯"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>同案犯(?!\#非姓名起始\#)(\#多个人名\#)据此</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提取“经依法审查查明：段之前的所有段落-->
+	<parser name="SCCM_DQD" nameCN="审查查明_段前段"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>^([\S\s]+?)(?:本院|现)[察查][明名]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>^([\S\s]+?)经(本院)?(?:依法)?[审侦][查察理](?:[察查][明名]|，本案的事实如下)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?=^(?:.*\n){0,5}?申[诉述]人)([\s\S]+)(?=本院复[察查][察查][明名])</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?=^(?:.*\n){0,5}?申[诉述]人)([\s\S]+)(?=申[诉述]人[^,，.。]*?不服[^,，.。]*?(?:检察|法)院)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?=^(?:.*\n){0,5}?申[诉述]人)([\s\S]+)(?=原案[^,，.。]*?一案)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--被判处三年有期徒刑以下刑罚以及免予刑事处罚，且不属于累犯或者惯犯的被告人的姓名-->
+			<parser name="BGR_FLGF" nameCN="被告人_非累惯犯" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)(?:原[审案](?:附带民事诉讼)?)?被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#(?:[（〈〔［].*?[）〉〕］])?[,，](?:男|女|曾用名|绰[号名]|外号|英文名|[化又幼乳别冒]名)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=^|\n)(?!(?:原[审案](?:附带民事诉讼)?)?被(?:告人|不起诉人)|被?申诉(?:代理)?人|赔偿请求人|委托代理人)(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)((?:[A-Za-z·•]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,}?)，(?:男|女|曾用名|绰[号名]|外号|英文名|[化又幼乳别冒]名)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#(?&lt;!因)涉嫌</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#因涉嫌</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="BGR_FAKE_NAME_DUAN" nameCN="被告人_别名_段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)(?:原[审案](?:附带民事诉讼)?)?被告人[^\r\n]*(?:曾用名|绰[号名]|外号|英文名|[化又幼乳别冒]名)[:：]?\#多个人名\#[,，)）][^\r\n]*</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="BGR_FAKE_NAME" nameCN="被告人_别名" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?:曾用名|绰[号名]|外号|英文名|[化又幼乳别冒]名)[:：]?\#多个人名\#[,，)）]</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!--被判处三年有期徒刑以下刑罚以及免予刑事处罚，且不属于累犯或者惯犯的被告人的姓名-->
+			<parser name="BGR_FLGF1" nameCN="被告人_非累惯犯1" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)(?:原[审案](?:附带民事诉讼)?)?被告人(?:自报(?:身份|姓名)?)?(?!\#非姓名起始\#)\#人名\#[,，]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--诉讼代表人-->
+			<parser name="SSDBR" nameCN="诉讼代表人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>诉讼代表人[:：]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){2,6})[,，。]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--提取 法定代表人-->
+			<parser name="FDDBR" nameCN="法定代表人"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>法定代表人[是为:：]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[^，。本人逃匿逸及或等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(本人|逃匿|逃逸)?[(,，。;；：:]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--提取 申诉人-->
+			<parser name="SHSR" nameCN="申诉人"  keepValue="true">
+				<searchers>
+					<searcher>
+						<!--pattern>(?&lt;=^|\n)申诉人[:：]?((?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){2,6})(?&lt;!\#单位后缀\#)[,，]</pattern-->
+						<pattern>(?&lt;=^|\n)申诉人[:：]?\#中英人名\#(?&lt;!\#单位后缀\#)[,，因]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDLR" nameCN="申诉代理人"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)申诉代理人[:：]?((?:[A-Za-z·]|[\x{4E00}-\x{9FA5}]){2,6})(?&lt;!\#单位后缀\#)[,，]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="BGR" nameCN="被告人" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被告人(?!\#非姓名起始\#)((?:\#中英人名\#[、和及或])*\#中英人名\#)因?涉嫌</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="BGR_LEIFAN_ALL" nameCN="被告人_累惯犯_ALL" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>被告人(?!\#非姓名起始\#)(\#多个人名\#)(?:在本案中)?[均都]?系[累惯]+犯</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--提取“经依法审查查明：”与“本院认为”之间的段落-->
+	<!--<parser name="SCCM_BYRW" nameCN="审查查明_本院认为段"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[审侦][查察理][察查][明名][：，]([\s\S]+)(?:本院|(?:经过?(?:复核)?审[查理]，|本案经过?)本院|本院经过?(?:复核)?审[查理]，?)认为</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+		</parsers>
+	</parser>-->
+	<!--提取“经依法审查查明：”与“本院认为”之间的段落-->
+	<!--<parser name="BANK_WRIT" nameCN="银行单位"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:(?:中国)?(?:农业|工商|建设|民生|光大)|中国|交通|招商|兴业|中信|华夏|国家开发)银行(?:(?:股份)?(?:有限)?公司)?(?:[\x{4E00}-\x{9FA5}]{2,}(?:[支分]行|储蓄所))*</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="ZRRTXFS" nameCN="自然人通讯方式" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:(?:(?:电话|手机)(?:号码?)?|联系(?:方式|电话))[为是：:]?|[、，（(])\s*(?&lt;![\d-])((?:(?:1\d{10}|(?:0\d{2,3}-?)?\d{7,8})[,;，、及和与或])*(?:1\d{10}|(?:0\d{2,3}-?)?\d{7,8}))(?![\d\-.元万美号])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="KSSH_QIANJIHANG" nameCN="刑事抗诉书"  keepValue="false">
+		<searchers>
+			<searcher>
+				<pattern>(?:^(?:.*\n){0,4}?(\#案号_检\#|\#案号_检2\#))([\s\S]*)(?=此致)</pattern>
+				<result>$9</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--提取 原审被告人-->
+			<parser name="YSBGR_XSKSSH" nameCN="原审被告人_刑事抗诉书" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:原审)?被告人(?!\#非姓名起始\#)((?:(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?)[因以](?:涉嫌|犯)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:原审)?被告人(?!\#非姓名起始\#)((?:(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(?&lt;!因)涉嫌</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:原审)?被告人(?!\#非姓名起始\#)((?:(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(?&lt;!涉嫌|[累主以从])犯(?!罪)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:原审)?被告人(?!\#非姓名起始\#)((?:(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})系[累主从以]犯(?!罪)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:原审)?被告人(?!\#非姓名起始\#)((?:(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})等\#数字\#*人</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:原审)?被告人(((?!\#非姓名起始\#)(\#汉字\#{2,3})[、和或])*(?!\#非姓名起始\#)(\#汉字\#{2,3}))(（)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--查找出生日期-->
+			<!--<parser name="ZRRCSRQ_XSKSSH" nameCN="自然人出生日期_刑事抗诉书"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>((?:[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{2,})年[一二三四五六七八九十元〇〇○ΟОοo0OＯ\d]{1,}月[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{1,}日)出?生</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>生于((?:[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{2,})年[一二三四五六七八九十元〇〇○ΟОοo0OＯ\d]{1,}月[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{1,}日)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>-->
+			<!--提取 被告单位-->
+			<!--<parser name="BGDW_XSKSSH" nameCN="被告单位_刑事抗诉书"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:原[审案](?:附带民事诉讼)?)?被告单位[:：]?((?:(?:(?:[A-Za-z·]|[^，,(降低|被告人)等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}])+?(?:公司|集团|中心|大队|[院所厅局处科园馆店厂矿场会台狱庭组]|[大中小]学|机关|高中|(?&lt;!(?&lt;!安)全)部))[、]?){1,8})</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>-->
+			<!--提取 法定代表人 -->
+			<parser name="FDDBR_XSKSSH" nameCN="法定代表人_刑事抗诉书"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>法定代表人[是为:：]?(?!(?:改为|授权委托书|负全责|期间|兼|变更|处|是我|是他|委托书|不是|我|和股东))((?:[A-Za-z·]|[^，。本人逃匿逸及或等与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6})(本人|逃匿|逃逸)?[(,，。;；：:]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--提取 法定代表人-->
+			<!--<parser name="DWDZ_XSKSSH" nameCN="单位地址_刑事抗诉书"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:住所|注册地|企业住所)地?址?[为在是:：]?(?!同|[地)）])([^，。,（）()]+?)[,，。]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>-->
+		</parsers>
+	</parser>
+	<parser name="MSHXZHTQKS_DSRXX" nameCN="民事行政提请抗诉_当事人信息"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:当事人基本情况)([\s\S]+)(?:(?:二、)?诉讼过程和法院历次审理情况|审查认定的案件事实)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--提取 当事人-->
+			<parser name="DSR_MSHXZHTQKS" nameCN="当事人_民事行政提请抗诉" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:当事人|委托代理人|申请(?:监督)?人|被(?:申请)?监督人)(?:[（(]\S+[）)])?[：:]?(?!\#非姓名起始\#)([^,.，。（）()]+)(?&lt;!\#单位后缀\#)[,.，。（）()]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--提取 当事单位-->
+			<!--<parser name="DSDW_MSHXZHTQKS" nameCN="当事单位_民事行政提请抗诉" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:当事人|委托代理人|申请(?:监督)?人|被(?:申请)?监督人)(?:[（(]\S+[）)])?[：:]?(?!\#非姓名起始\#)([^,.，。（）()]+)(?&lt;=\#单位后缀\#)[,.，。（）()]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSDWJC_MSHXZHTQKS" nameCN="单位简称_民事行政提请抗诉" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:(?:以下)?简称[:：]?)([\w\d\x{4E00}-\x{9FA5}]+(?:\#单位后缀_单位\#))</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>-->
+			<!-- 查找出生日期 -->
+			<!--<parser name="ZRRCSRQ_MSHXZHTQKS" nameCN="自然人出生日期_民事行政提请抗诉"  keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>((?:[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{2,})年[一二三四五六七八九十元〇〇○ΟОοo0OＯ\d]{1,}月[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{1,}日)出?生</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>生于((?:[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{2,})年[一二三四五六七八九十元〇〇○ΟОοo0OＯ\d]{1,}月[一二三四五六七八九十〇〇○ΟОοo0OＯ\d]{1,}日)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="GZDW_MSHXZHTQKS" nameCN="工作单位_民事行政提请抗诉" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:[,，])(?:原系?|系|案发前[为系])?([\w\d\x{4E00}-\x{9FA5}（）()]{1,25}?)(?:退休)?(\#职务\#|\#身份\#)(?=[,.，。、])</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>-->
+		</parsers>
+	</parser>
+	<parser name="PCJDS_NRD" nameCN="赔偿决定书_内容段"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:^(?:.*\n){0,4}?\S{0,5}[\S]+赔偿决定书[\n\s]*\S*?[\S\s]+?分?检[\S\s]+?[\d\s]*号\n*)([\s\S]*?)(?=本院查明|本院认为)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--赔偿请求人-->
+			<parser name="PCQQR" nameCN="赔偿请求人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)赔偿请求人[:：]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[^无等与的犯罪证（）,，。\x{0000}-\x{4DFF}\x{9FA6}]){2,6})[,，。]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!--赔偿请求人-->
+			<parser name="WTDLR_XSPCJDS" nameCN="委托代理人_刑事赔偿决定书" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)委托代理人[:：]?(?!\#非姓名起始\#)((?:[A-Za-z·]|[^无等与的犯罪证（）,，。\x{0000}-\x{4DFF}\x{9FA6}]){2,6})[,，。]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZJSHCHJDSH_NRD" nameCN="终结审查决定书_内容段"  keepValue="true">
+		<searchers>
+			<searcher><!--^(?:.*\n){0,4}?\S{0,5}-->
+				<pattern>(?:终结审查决定书[\n\s]*\S*?[\S\s]+?分?检[\S\s]+?[\d\s]*号\n*)([\s\S]*?)(?=(?:(?:本院)?决定)?(?:终结审查|审查终结))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--提取 案由段-->
+			<parser name="ZJSHCHJDSH_AYD" nameCN="终结审查决定书_案由段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^(?:本院在(?:办理|审查))([^,.，。]+?)(?:\#纠纷类型\#(?:监督申请)?|(?:(?:民事|行政|刑事)申诉|民事申请监督)|申请.*?)(?:案件?)?一案(?:中|期间)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>^(?!本院在(?:办理|审查))([^,.，。]+?)因?(?:\#纠纷类型\#(?:监督申请)?|(?:(?:民事|行政|刑事)申诉|民事申请监督)|申请.*?)(?:案件?)?一案</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>^(?:本院在(?:办理|审查))([^,.，。]+?)不服[^,，.。]*?(?:检察|法)院</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<!--提取 当事人-->
+					<parser name="ZJSHCHJDSH_DSR" nameCN="当事人_终结审查决定书" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?:因?与)(?:申请人|其他事人)?([^,.，。（）()]{2,}?)(?:等人|等?\#其它数\#人(?:之间)?)?(?&lt;!\#单位后缀\#)$</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?:^|、)(?:申请人|其他事人)?([^,.，。、（）()]{2,}?)(?:等人|等?\#其它数\#人(?:之间)?)?(?&lt;!\#单位后缀\#)因与</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?:^|、)(?:申请人|其他事人)?([^,.，。、（）()]{2,}?)(?:等人|等?\#其它数\#人(?:之间)?)?(?&lt;!\#单位后缀\#|因)与</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?:^|、)(?:申请人|其他事人)?([^,.，。、（）()]{2,5}?)(?:等人|等?\#其它数\#人(?:之间)?)?(?&lt;!\#单位后缀\#)(?=$|[、])</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<!--提取 当事单位-->
+					<!--<parser name="ZJSHCHJDSH_DSDW" nameCN="当事单位_终结审查决定书" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?:[^,.，。、（）()]+?与)(?:申请人|其他事人)?([^,.，。、]{5,}?)(?&lt;=\#单位后缀\#)$</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?:^|[、和与])(?:申请人|其他事人)?([^,.，。、]{5,}?)(?&lt;=\#单位后缀\#)(?:因?与)</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?:^|[、和与])(?:申请人|其他事人)?(?![^,.，。（）()、]+?与)([^,.，。、]{5,}?)(?&lt;=\#单位后缀\#)$</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>-->
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	<!--<parser name="DSDW" nameCN="当事单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[^,.，。、（）()]+?与)([^,.，。、]{1,}?(\#单位后缀\#))发生纠纷</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>[原被]告(?!人)([\x{4E00}-\x{9FA5}]{2,5}(?:\#单位后缀_单位\#))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="BZHCHJDSHQ_JDS" nameCN="不支持监督申请决定书"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:^(?:.*\n){0,4}?\S{0,5}不支持监督申请决定书[\n\s]*\S*?[\S\s]+?分?检[\S\s]+?[\d\s]*号\n*)([\s\S]*?)(?=综上(?:所述)?|该案不符合)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:^(?:.*\n){0,4}?\S{0,8}抗诉书[\n\s]*\S*?[\S\s]+?分?检[\S\s]+?[\d\s]*号\n*)([\s\S]*?)(?=综上(?:所述)?)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!--提取 基本信息段-->
+			<parser name="BZHCHJDSHQ_AYD" nameCN="不支持监督申请决定书_基本信息段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^([\s\S]+?)(?=本院(?:决定|(?:经审查)?认为)|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<!--提取 当事人信息段-->
+					<parser name="BZHCHJDSHQ_DSR" nameCN="不支持监督申请决定书_当事人信息段" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?&lt;=^|\n)(?!申诉人)(?:申请监督人(?:[（(]\S{3,7}[）)]))?((?:(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,})因((?![与诉])[\S]*一案|不服[^，。,.]+)</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?&lt;=^|\n)(?:申请监督人(?:[（(]\S{3,7}[）)]))?((?:(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?)(?:因?[与诉])((?:(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?)?(?:等人)?就?\#纠纷类型\#一案</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?&lt;=^|\n)(?:申请监督人(?:[（(]\S{3,7}[）)]))?((?:(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?)(?:因?[与诉])((?:(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?[与、])*(?:[A-Za-z·]|[^等与的犯罪证\x{0000}-\x{4DFF}\x{9FA6}]){2,}?)?(?:等人)?就?\#纠纷类型\#一案</pattern>
+								<result>$2</result>
+							</searcher>
+						</searchers>
+						<parsers>
+							<!--提取 当事人 -->
+							<parser name="BZHCHJDSHQ_DSR" nameCN="当事人_不支持监督申请" keepValue="true">
+								<searchers>
+									<searcher>
+										<pattern>(?&lt;=^|、)((?:[^,.，。（）()](?&lt;!\#单位后缀\#)){2,})(?:(?:[（(][\s\S]*[)）])?)(?=$|、)</pattern>
+										<result>$1</result>
+									</searcher>
+								</searchers>
+							</parser>
+							<!--提取 当事单位 -->
+							<!--<parser name="BZHCHJDSHQ_DSDW" nameCN="当事单位_不支持监督申请" keepValue="true">
+								<searchers>
+									<searcher>
+										<pattern>(?&lt;=^|、)([^,.，。、]{2,}?)(?&lt;=\#单位后缀\#)(?:(?:[（(][\s\S]*[)）])?)(?=$|、)</pattern>
+										<result>$1</result>
+									</searcher>
+								</searchers>
+							</parser>-->
+							<!--<parser name="DSDWJC_BZHCHJDSHQ" nameCN="单位简称_不支持监督申请" keepValue="true">
+								<searchers>
+									<searcher>
+										<pattern>(?:(?:以下)?简称[:：]?)([\w\d\x{4E00}-\x{9FA5}]+(?:\#单位后缀_单位\#))</pattern>
+										<result>$1</result>
+									</searcher>
+								</searchers>
+							</parser>-->
+						</parsers>
+					</parser>
+				</parsers>
+			</parser>
+			<!--<parser name="BZHCHJDSHQ_QTXX" nameCN="不支持监督申请决定书_其他信息段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:本院(?:决定|认为))([\s\S]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+				</parsers>
+			</parser>-->
+		</parsers>
+	</parser>
+			<!--判断是否是未成年人犯罪-->
+	<!--<parser name="SFSWCNFZ" nameCN="是否是未成年犯罪"  keepValue="true">
+			<searchers>
+				<searcher>
+					<pattern>((被告人|犯罪嫌疑人).{0,20}(未成年|不满(十八|18)周岁))|(犯罪时[均都]?[系是]未成年)|未满十八周岁</pattern>
+				    <result>是</result>
+				</searcher>
+			</searchers>
+	</parser>-->
+	<!--提取健康状况,返回结果：健康状况：根据现有材料未发现犯罪嫌疑人黄剑艺患有任何影响羁押的严重疾病或其他不适宜羁押的情况。-->
+	<parser name="AH" nameCN="案号"  keepValue="true">
+			<searchers>
+				<searcher>
+					<pattern>.{1,5}检.{0,5}(不立|不批捕|未刑不诉|民监|行监|公诉刑诉|公诉刑抗|赔决|刑申复决|刑(不)?诉|刑申复通|民[(﹝（]行[)）﹞])?[﹝〔\[(（]\d{4}[〕﹞）)\]]\d{1,11}号</pattern>
+				    <result>$0</result>
+				</searcher>
+				<searcher>
+					<patternid>案号</patternid>
+				    <result>$1</result>
+				</searcher>
+			</searchers>
+	</parser>
+	<!--<parser name="WSZFRQ" nameCN="文书制发日期"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[\s\S]{5}[\n][\s\x{3000}]*(((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2})年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日)(?=[\x{3000}\s]*(?:[\n]+|$))</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<!--提取审判组成员-->
+	<parser name="SPZCY" nameCN="审判组成员"  keepValue="true">
+			<searchers>
+				<searcher>
+					<pattern>(?:审判|书记|陪审)[长员][:：]?((?:(?:[A-Za-z·]|[^，、等审代与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,10}[、]?)+)</pattern>
+				    <result>$1</result>
+				</searcher>
+			</searchers>
+	</parser>
+	<parser name="BZR" nameCN="保证人"  keepValue="true">
+			<searchers>
+				<searcher>
+					<pattern>(?:保证人)[:：]?((?:(?:[A-Za-z·]|[^，、委托等审代与的犯罪证（）\x{0000}-\x{4DFF}\x{9FA6}]){2,6}[、]?)+)(?=有权委托|\d|[()（），,。])</pattern>
+					<result>$1</result>
+				</searcher>
+			</searchers>
+	</parser>
+	<!--
+	<parser name="WEBSITE" nameCN="网站"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[“"]\s*([\w\x{4E00}-\x{9FA5}]+)\s*[”"]\s*[\x{4E00}-\x{9FA5}]{0,5}?网站</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="WEBSITEURL" nameCN="网址"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>((http|https|ftp)\://)?([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4})(\:[0-9]+)?(/[^/][a-zA-Z0-9\.\,\?\'\\/\+&amp;%\$#\=~_\-@]*)*</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>-->
+	<parser name="LS" nameCN="律师"  keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:辩护人|诉讼代理人)(?:[^,.，。、]+(?:律师事务所|法律援助中心)(?:律师)?)(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与]|以及|伙同|及其?|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:[，。、（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|出具)</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:辩护人|诉讼代理人)(?!\#非姓名起始\#)(([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?(?:(?:[、和与]|以及|伙同|及其?|联[合手]|串通|勾结)([A-Za-z]+(?:\x{0020}[A-Za-z]+){0,3}|[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}?(?:·[〇\x{3400}-\x{4DB5}\x{4E00}-\x{9FCB}\x{E815}-\x{E864}]{1,6}){0,3})(?:[（〈〔［].*?[）〉〕］])?)*(?:等[\d〇零一二三四五六七八九十百千万亿]+人)?)(?:[，。、（）等的犯罪]|受伤|做证|均?[出到]庭|均?证[言明实]|均?[辨指]认|出具)(?:[^,.，。、]+(?:律师事务所|法律援助中心)(?:律师)?)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="AH" nameCN="括号类"  keepValue="true">
+			<searchers>
+				<searcher>
+					<pattern>[\[|［|〔|﹝]\d{4}[﹞|〕|］|\]]</pattern>
+				    <result>$0</result>
+				</searcher>
+			</searchers>
+	</parser>
+</parsers>

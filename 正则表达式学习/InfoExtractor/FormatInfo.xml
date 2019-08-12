@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!-- 检察院名称  -->
+	<parser name="JCYMC1" nameCN="检察院名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>\#范围_前几行\#((中华人民共和国\n)?\#检院名称\#)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 文书类型 -->
+	<parser name="WSLX" nameCN="文书类型" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 文书编号 -->
+	<parser name="WSBH" nameCN="文书编号" keepValue="true">
+		<searchers>
+			<!-- 检时间在案号中间。检2时间在案号开始部分-->
+			<searcher>
+				<patternid>段_案号_检</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号_检2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 检察院名称前会有绝密等字样 -->
+	<parser name="JCYMCQ" nameCN="检察院名称前" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(\#范围_前几行\#)((中华人民共和国\n)?\#检院名称\#)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 抬头名称-->
+	<parser name="TTMC" nameCN="抬头名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>^(?:.*\n){0,4}?((?&lt;=\n).{0,20}?[:：])\n</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>		
+	</parser>	
+	<!-- 署名检察院名称或人名-->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="SMJCY" nameCN="署名" keepValue="true">
+				<searchers>
+					<!--
+					<searcher>
+						<pattern>(((?&lt;=\n)\#检院名称\#\n\#年月\#)|((?&lt;=\n)\#检院名称\#\n\#年月日\#))</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=\n)(\#检察员(不含书记员)\#(.{0,20})(?:（代）)?(\n|$))+</pattern>
+						<result>$0</result>
+					</searcher>   -->
+					<!-- 兼容对一个职位多个人名的署名的支持 -->
+					<searcher>
+						<pattern>(?&lt;=\n)(\#检察院名称\#\n\#年月\#)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=\n)(\#检察院名称\#\n\#年月日\#)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=\n)(\#检察员(不含书记员)\#(.{0,20})(?:（代）)?(\n|$)(\#汉字\#{2,5}(\n|$))*)+\#年月\#</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=\n)(\#检察员(不含书记员)\#(.{0,20})(?:（代）)?(\n|$)(\#汉字\#{2,5}(\n|$))*)+\#年月日\#</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>	
+	<!-- 单位名称(检察院名称或法院名称) -->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="YUANYIN" nameCN="院印" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(侦查部门)?[(（]院?印[）)]</pattern>
+						<result>$0</result>
+					</searcher>	
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 单位名称(检察院名称或法院名称) -->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="DWMC" nameCN="单位名称" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(\n此致\n((?&lt;=\n)\#检院名称\#))</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>(\n此致\n((?&lt;=\n)\#法院名称\#))</pattern>
+						<result>$0</result>
+					</searcher>					
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 此致-->
+	<parser name="LKCZ" nameCN="落款此致" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>\n此致\n</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>		
+	</parser>	
+	<!-- 文书日期 -->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="WSRQ" nameCN="文书日期" keepValue="true">
+				<searchers>
+					<searcher>
+						<!--年月日-->
+						<pattern>(\#年月日\#)(?:[\S\s]*)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<!--年月-->
+						<pattern>(\#年月\#)(?:[\S\s]*)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 书记员 -->
+	<parser name="SJY" nameCN="书记员" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(\#书记员角色\#(.{0,10})(?:（代）)?(\n|$))+</pattern>				
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 附注信息-->	
+	<parser name="FZXX" nameCN="附注信息" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>\n附(?:[件注])?[:：][^\n]*?\n</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>		
+	</parser>	
+	<!-- 文书数量-->	
+	<parser name="WSSL" nameCN="文书数量" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>\n本文书一式.份[^\n]*?\n</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>		
+	</parser>		
+	<include file="Ext_FormatInfoExtend"/>
+</parsers>

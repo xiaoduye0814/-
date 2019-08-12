@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern>
+  <!-- 模式资源引用 -->
+  <include file="Ext_Pattern_Common"/>
+  <include file="Ext_Pattern_com_XS"/>
+  <include file="Ext_Pattern_com_MS"/>
+</pattern>

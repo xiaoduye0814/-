@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--反贪文书信息提取配置文件-->
+<parsers>
+	<parser name="ZCJH_QW" nameCN="侦查计划_全文" keepValue="true">
+		<searchers>
+			<!--XXX案侦查计划-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}[^\r\n]{0,5}案侦查计划([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 侦查计划当事人段 -->
+			<parser name="FTWSDSR" nameCN="侦查计划_当事人段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、犯罪人?嫌疑人基本情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="侦查计划_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源及办理过程 -->
+			<parser name="FTWSDSR" nameCN="侦查计划_案件来源及办理过程" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、案件来源及办理过程[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 当前掌握的犯罪事实及证据情况 -->
+			<parser name="FTWSDSR" nameCN="侦查计划_当前掌握的犯罪事实及证据情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、当前掌握的犯罪事实及证据情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 下一步侦查工作计划 -->
+			<parser name="FTWSDSR" nameCN="侦查计划_下一步侦查工作计划" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、下一步侦查工作计划[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="侦查终结报告_全文" keepValue="true">
+		<searchers>
+			<!--侦查终结报告-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}侦查终结报告([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 侦查终结报告当事人段 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_犯罪人嫌疑人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、犯罪人?嫌疑人基本情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="侦查终结报告_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_案件来源" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、案件来源[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 当前掌握的犯罪事实及证据情况 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_主要涉嫌犯罪事实" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、主要案件事实[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 主要证据 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_主要证据" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、主要证据[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 需要说明的问题 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_需要说明的问题" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、需要说明的问题[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 定性、处理意见和法律依据 -->
+			<parser name="FTWSDSR" nameCN="侦查终结报告_定性、处理意见和法律依据" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、定性、处理意见和法律依据[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="侦查终结报告_处理意见" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>[依根]据([^\r\n]+?)(?:的规定)?，拟将[^\r\n]{1,20}案((?:移送)?(?:审[查理])?不?起诉|作?撤销案件(?:处理)?)</pattern>
+								<result>$2</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSDSRBs" nameCN="侦查终结报告_法律依据" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>[依根]据([^\r\n]+)之规定，拟将[^\r\n]{1,20}案((?:移送)?(?:审[查理])?不?起诉|作?撤销案件(?:处理)?)</pattern>
+								<result>$1</result>
+							</searcher>
+							<searcher>
+								<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第(?:一百六十三|163|七十九|79|一百六十五|165)条.+?(?=(?:[：:，\n]|$))</pattern>
+								<result>$0</result>
+							</searcher>
+							<searcher>
+								<pattern>(《[^《》]+?(《.+?》)?[^《》]+?》)?(第?([\d〇零一二三四五六七八九十百千（）()、xX*]+(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)+</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSQSZM" nameCN="侦查终结报告_涉嫌罪名" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>多个罪名</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSDSRBs" nameCN="侦查终结报告_量刑" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?=[^。]*建议)(?=[^。]*(?:从[重轻]|减轻))[^。]+?处罚</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="初查结论报告_全文" keepValue="true">
+		<searchers>
+			<!--初查结论报告-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}初查结论报告([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 初查结论报告当事人段 -->
+			<parser name="FTWSDSR" nameCN="初查结论报告_初查对象基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:(?:(?=[^\n]{1,4})[检院](?:\.?分)?(?:.{1,10})(?:[\[(（［〔【]\d{4}[\])）］】〕]|\d{4})年?第?[\[(（［〔【]?(?:(?:\d{1,4}[－\-—])|(?:\d{1,4}、)+)?\d{1,4}[\])）］】〕]?[号）]))[\s]+([\s\S]+?)(?:[^\r\n]+(?:经检察长决定|自首|(?:单位|公民)举报|上级交办|移送|办案中发现))</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="初查结论报告_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?:^|\n)((初查对象[\s\S]+?(?=\n被|\n(以上|上[述列]).{1,2}初查对象|$))|(?:[\d一二三四五六七八九十]+、)(?:初查对象[：:（]?)[\s\S]*?(?=\n(?:[\d一二三四五六七八九十]+、)被|$))</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源及办理过程 -->
+			<parser name="FTWSDSR" nameCN="初查结论报告_线索来源及初查经过" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?=[^\r\n]*涉嫌[^\r\n]*的(?:案件)?线索)(?=[^\r\n]*经检察长决定)([\s\S]+?)(?&lt;=现已初查终结。|\s经初查查明)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="FTWSDSR" nameCN="初查结论报告_线索来源" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_线索来源</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<parser name="FTWSDSR" nameCN="初查结论报告_结论" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:综上所述，?)((?=.*符合立案条件)(?=.*提请(?:立案侦查|不予立案))[\s\S]+?)(?:[\r\n]|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>	
+	<parser name="ZCJH_QW" nameCN="报请逮捕书_全文" keepValue="true">
+		<searchers>
+			<!--XXX案侦查计划-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}报请逮捕书([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 侦查计划当事人段 -->
+			<parser name="FTWSDSR" nameCN="报请逮捕书_犯罪人嫌疑人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>报请.{1,10}院审查(?:决定)?逮捕。?[\s]+([\s\S]+?)[\r\n\s]+犯罪嫌疑人[\S]+涉嫌[\S]+案</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="报请逮捕书_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源及办理过程 -->
+			<parser name="FTWSDSR" nameCN="报请逮捕书_本院认为" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=\n)((?:本院|(?:经过?(?:复核)?审[查理]，|本案经过?)本院|本院经过?(?:复核)?审[查理]，?)认为.+符合逮捕条件.*?)(?:\n|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="报请逮捕书_引用法条" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第(?:一百六十三|163|七十九|79|一百六十五|165)条.+?(?=(?:[：:，\n]|$))</pattern>
+								<result>$0</result>
+							</searcher>
+							<searcher>
+								<pattern>(《[^《》]+?(《.+?》)?[^《》]+?》)?(第?([\d〇零一二三四五六七八九十百千（）()、xX*]+(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)+</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSQSZM" nameCN="报请逮捕书_逮捕罪名" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>多个罪名</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="报请重新审查逮捕意见书_全文" keepValue="true">
+		<searchers>
+			<!--XXX案侦查计划-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}报请重新审查逮捕意见书([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 侦查计划当事人段 -->
+			<parser name="FTWSDSR" nameCN="报请重新审查逮捕意见书_犯罪人嫌疑人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:本院|(?:经过?(?:复核)?审[查理]，|本案经过?)本院|本院经过?(?:复核)?审[查理]，?)认为[：:]?(.+)有证据证明</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="报请重新审查逮捕意见书_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源及办理过程 -->
+			<parser name="FTWSDSR" nameCN="报请重新审查逮捕意见书_报请重新审查段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?=[^\r\n。]*嫌疑人[^。\r\n]*触犯)(?=[^。]*符合逮捕条件)[^\r\n]+?(?:$|\n)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="报请重新审查逮捕意见书_引用法条" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第(?:一百六十三|163|七十九|79|一百六十五|165)条.+?(?=(?:[：:，\n]))</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSQSZM" nameCN="报请重新审查逮捕意见书_逮捕罪名" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>多个罪名</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="报送案件意见书_全文" keepValue="true">
+		<searchers>
+			<!--报送案件意见书-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}报送案件意见书([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 报送案件意见书当事人段 -->
+			<parser name="FTWSDSR" nameCN="报送案件意见书_犯罪人嫌疑人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、犯罪人?嫌疑人基本情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="报送案件意见书_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 案件来源与涉嫌犯罪事实 -->
+			<parser name="FTWSDSR" nameCN="报送案件意见书_案件来源与涉嫌犯罪事实" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、案件来源与涉嫌犯罪事实[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 报送的原因和理由 -->
+			<parser name="FTWSDSR" nameCN="报送案件意见书_报送的原因和理由" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、报送的原因和理由[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请批示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="提请初查报告_全文" keepValue="true">
+		<searchers>
+			<!--提请初查报告-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}提请初查报告([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 报送案件意见书当事人段 -->
+			<parser name="FTWSDSR" nameCN="提请初查报告_被举报人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、被(?:举报|调查)人(?:（或被调查人）)的基本情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="提请初查报告_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?:^|\n)((被(?:举报|调查)人[\s\S]+?(?=\n被|\n(以上|上[述列]).{1,2}被(?:举报|调查)人|$))|(?:[\d一二三四五六七八九十]+、)(?:被(?:举报|调查)(?:人|单位)[：:（]?)[\s\S]*?(?=\n(?:[\d一二三四五六七八九十]+、)被|$))</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 线索来源 -->
+			<parser name="FTWSDSR" nameCN="提请初查报告_线索来源" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、线索来源[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 举报内容 -->
+			<parser name="FTWSDSR" nameCN="提请初查报告_举报内容" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、举报内容[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 处理意见 -->
+			<parser name="FTWSDSR" nameCN="提请初查报告_处理意见" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、处理意见[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 初查工作方案 -->
+			<parser name="FTWSDSR" nameCN="提请初查报告_初查工作方案" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、初查工作方案[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="ZCJH_QW" nameCN="提请立案报告_全文" keepValue="true">
+		<searchers>
+			<!--提请初查报告-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}提请立案报告([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 提请立案报告当事人段 -->
+			<parser name="FTWSDSR" nameCN="提请立案报告_初查对象的基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>初查对象的基本情况[:：]?[\s]*([\s\S]+?)[\r\n\s]+(?:[\S]*线索来源及涉嫌的主要问题[:：]|[^\r\n]+经检察长决定|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 线索来源及涉嫌的主要问题 -->
+			<parser name="FTWSDSR" nameCN="提请立案报告_线索来源及涉嫌的主要问题" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:线索来源及涉嫌的主要问题[:：]?)([\s\S]+?)(?:经初查查明|现已初查终结)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="FTWSDSR" nameCN="提请立案报告_线索来源" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_线索来源</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 举报内容 -->
+			<parser name="FTWSDSR" nameCN="提请立案报告_结论" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>综上所述((?=.*符合立案条件)[\s\S]+?提请立案侦查。?)(?:[\r\n]|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	
+	<parser name="ZCJH_QW" nameCN="补充立案报告_全文" keepValue="true">
+		<searchers>
+			<!--补充立案报告-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}补充立案报告([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 报送案件意见书当事人段 -->
+			<parser name="FTWSDSR" nameCN="补充立案报告_犯罪嫌疑人基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、犯罪嫌疑人基本情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="补充立案报告_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 线索来源 -->
+			<parser name="FTWSDSR" nameCN="补充立案报告_线索来源" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、(?:案件|线索)来源[^\r\n]+[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 事实与证据情况 -->
+			<parser name="FTWSDSR" nameCN="补充立案报告_事实与证据情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、事实与证据情况[\s]+([\s\S]+?)[\r\n\s]+(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示|[\r\n])</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 处理意见 -->
+			<parser name="FTWSDSR" nameCN="补充立案报告_补充立案侦查的理由和法律依据" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[一二三四五六七八九十]+、补充立案侦查的理由和法律依据[\s]*([\s\S]+?)[\r\n\s]*(?:[一二三四五六七八九十]+、|[^\r\n]+请[批审]示|[\r\n])</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<parser name="ZCJH_QW" nameCN="起诉意见书_全文" keepValue="true">
+		<searchers>
+			<!--起诉意见书-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}起诉意见书([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 提请立案报告当事人段 -->
+			<parser name="FTWSDSR" nameCN="起诉意见书_犯罪嫌疑人的基本情况" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:(?:(?=[^\n]{1,4})[检院](?:\.?分)?(?:.{1,10})(?:[\[(（［〔【]\d{4}[\])）］】〕]|\d{4})年?第?[\[(（［〔【]?(?:(?:\d{1,4}[－\-—])|(?:\d{1,4}、)+)?\d{1,4}[\])）］】〕]?[号）]))[\s]+([\s\S]+?)(?:[^\r\n]+?(?:经检察长决定|自首|初查|(?:单位|公民)举报|上级交办|移送|办案中发现))</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="起诉意见书_当事人" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>反贪文书_犯罪嫌疑人</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 线索来源及涉嫌的主要问题 -->
+			<parser name="FTWSDSR" nameCN="起诉意见书_线索来源及侦查经过" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?=[^\r\n]*(?:经检察长决定|自首|初查|(?:单位|公民)举报|上级交办|移送|办案中发现))([\s\S]+?)(?:[^\r\n]+?现已侦查终结)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 侦查终结说明 -->
+			<parser name="FTWSDSR" nameCN="起诉意见书_侦查终结说明" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(犯罪嫌疑人[\S]+涉嫌[\S]+案，现已侦查终结。)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 起诉意见书_结论 -->
+			<parser name="FTWSDSR" nameCN="起诉意见书_结论" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>综上所述[，,]?((?=.*涉嫌[\S]{1,10}罪)[\s\S]+?移送审查起诉。?[^\r\n]*?)(?:[\r\n]|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSDSRBs" nameCN="起诉意见书_引用法条" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第(?:一百六十三|163|七十九|79|一百六十五|165)条.+?(?=(?:[：:，\n]|$))</pattern>
+								<result>$0</result>
+							</searcher>
+							<searcher>
+								<pattern>(《[^《》]+?(《.+?》)?[^《》]+?》)?(第?([\d〇零一二三四五六七八九十百千（）()、xX*]+(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)+</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+					<parser name="QSSQSZM" nameCN="起诉意见书_起诉罪名" keepValue="true">
+						<searchers>
+							<searcher>
+								<patternid>多个罪名</patternid>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="XWBL_QW" nameCN="讯问笔录_全文" keepValue="true">
+		<searchers>
+			<!--起诉意见书-->
+			<searcher>
+				<pattern>^(?:.*\n){0,3}[讯询]问笔录([\s\S]+)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<!-- 提请立案报告当事人段 -->
+			<parser name="XWBL_XWSJ" nameCN="讯问笔录_讯问时间" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)[讯询]问时间[：:](?=[^\r]*年)(?=[^\r]*月)(?=[^\r]*日)([^\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 起诉意见书_结论 -->
+			<parser name="XWBL_XWCS" nameCN="讯问笔录_讯问次数" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)([(（]第.*?次[）)])(?=$|\n)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="XWBL_DYCXW" nameCN="讯问笔录_第一次讯问" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(?&lt;=^|\n)([(（]第[一1壹]次[）)])(?=$|\n)</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<!-- 线索来源及涉嫌的主要问题 -->
+			<parser name="XWBL_GZSX" nameCN="讯问笔录_告知事项" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?=[^\n]*权利)(?=[^\n]*我们是.{1,20}检察院)(?=[^\n]*现依法对你(?:进行)?[询讯]问)[^\n]+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="XWBL_GZSX" nameCN="讯问笔录_非法取证行为" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?=[^\n]*获取)(?=[^\n]*(有无|有没有|是否有)(非法羁押|刑讯逼供|威胁|引诱|欺骗))([^\n]+)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 侦查终结说明 -->
+			<parser name="XWBL_XWRD" nameCN="讯问笔录_讯问人段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[询讯]问人：([^\n（）()]*?)(?=记录人：|\n|$)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="XWBL_XWR" nameCN="讯问笔录_讯问人" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>[询讯]问人：([^\n（）()]*?)(?=记录人：|\n|$)</pattern>
+								<result>$1</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+</parsers>

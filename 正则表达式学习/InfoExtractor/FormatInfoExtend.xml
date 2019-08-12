@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!-- 文书类型 -->
+	<parser name="WSLX" nameCN="文书类型" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>公诉案件审查报告</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+</parsers>

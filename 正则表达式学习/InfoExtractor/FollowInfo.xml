@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!-- 案件类别 -->
+	<parser name="AJLB" nameCN="可能案件类别">
+		<searchers>
+			<searcher>
+				<pattern>^(?:.*\n){0,4}?(刑事(?:附带民(?:事(?:诉讼)?|诉))?|民事|行政|赔偿|执行|[^。]*(?=审理报告))((?:赔偿)?(判决书|裁定书|调解书|审理报告))</pattern>
+				<result>$1</result>
+			</searcher>
+			<!-- 个别文书名称出现在头部表格中的，由文本提取步骤将之迁移到了尾部…… -->
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$2</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="AJLB" nameCN="案件类别" keepValue="true">
+				<searchers>
+  				<searcher>
+						<pattern>^[^。]*(纠纷|争议)[^。]*$</pattern>
+						<result>民事</result>
+					</searcher>
+					<searcher>
+						<pattern>^[^。]*(盗窃|抢劫|寻衅(\n)?滋事|诈骗|毒品|强奸|敲诈|勒索|交通(\n)?肇事|卖淫|犯罪(\n)?所得|故意(\n)?杀人|妨害(\n)?公务|合同(\n)?诈骗|非法(\n)?经营|故意(\n)?伤害)[^。]*$</pattern>
+						<result>刑事</result>
+					</searcher>					
+					<searcher>
+						<pattern>(刑事|民事|行政|赔偿|执行)(?:附带民(?:事(?:诉讼)?|诉))?</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 审判程序 -->
+	<parser name="AH_SPCX" nameCN="案号_审判程序">
+		<searchers>
+			<searcher>
+				<patternid>段_案号</patternid>
+				<result>$2</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号2</patternid>
+				<result>$2</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="SPCX" nameCN="审判程序" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^(初|破|催|督|特)$</pattern>
+						<result>一审</result>
+					</searcher>
+					<searcher>
+						<pattern>^(终)$</pattern>
+						<result>二审</result>
+					</searcher>
+					<searcher>
+						<pattern>^(再初|再终|再|提|抗初|抗终|抗)$</pattern>
+						<result>再审</result>
+					</searcher>
+					<searcher>
+						<pattern>^(监|申)$</pattern>
+						<result>再审复查</result>
+					</searcher>
+					<searcher>
+						<pattern>^(复|核)$</pattern>
+						<result>复核</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!--文书类别-->
+	<parser name="WSDCPLB" nameCN="文书的裁判类别">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<!--<pattern>^(刑事(?:附带民(?:事(?:诉讼)?|诉))?|民事|行政|赔偿|执行)((?:赔偿)?(判决|裁定|调解)书)$</pattern>-->
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="WSCPLB" nameCN="文书裁判类别" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>判决</pattern>
+						<result>判决</result>
+					</searcher>
+					<searcher>
+						<pattern>裁定</pattern>
+						<result>裁定</result>
+					</searcher>
+					<searcher>
+						<pattern>调解</pattern>
+						<result>调解</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 案号 -->
+	<parser name="AH" nameCN="案号" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_案号</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 案由 -->
+	<parser name="DHDSR" nameCN="段后_当事人">
+		<searchers>
+			<searcher>
+				<pattern>\#段后_当事人\#[\s\S]+</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="AYD" nameCN="案由段" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^\n)[^\n]+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<!--<parsers>
+					<parser name="AY" nameCN="案由" keepValue="true">
+				    <searchers>
+					    <searcher>
+						    <pattern>犯([^,.;，。；：（）()\n]+罪)</pattern>
+						    <result>$1</result>
+					    </searcher>
+					    <searcher>
+						    <pattern>犯([^,.;，。；：（）()\n]+罪)</pattern>
+						    <result>$1</result>
+					    </searcher>
+					    <searcher>
+						    <pattern>犯([^,.;，。；：（）()\n]+罪)</pattern>
+						    <result>$1</result>
+					    </searcher>
+				    </searchers>
+				  </parser>
+				</parsers>-->
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 文书名称 -->
+	<parser name="WSMC" nameCN="文书名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<!-- 个别文书名称出现在头部表格中的，由文本提取步骤将之迁移到了尾部…… -->
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 法院名称 -->
+	<parser name="FYMC" nameCN="法院名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>^(中华人民共和国\n?)?\#法院名称\#</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 文书日期 -->
+	<parser name="WSRQ" nameCN="文书日期" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--年月日-->
+				<pattern>(?&lt;=\n)([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{0,4})年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{0,3})月(([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{0,3})日)?(?=\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 当事人段 -->
+	<parser name="DDSR" nameCN="段_当事人" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_当事人</patternid>
+				<result>$6</result>
+			</searcher>
+		</searchers>
+		<!--parsers>
+			<parser name="DSRMC" nameCN="当事人名称" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:(?:(?:^|\n)(?:被告人)(?:(?:暨|兼).*?人)?))(?:[\(（].*?[）\)])?([^\(（][^，。]*)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers-->			
+	</parser>	
+	
+	<!-- 判决结果 -->	
+	<parser name="PJJG" nameCN="判决部分" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:\#本院认为\#[\s\S]*?)(?:(?:(?:判决|裁定)如下)[：:，\n])([\s\S]*?)(?=如不服本(?:判决|裁定)|本(?:判决|裁定)为终审|\#审判人员角色\#)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 上诉信息 -->	
+	<parser name="SSXX" nameCN="上诉信息" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(如不服本(?:判决|裁定)|本(?:判决|裁定)为终审)[^\n]+</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 上级法院 -->
+	<parser name="DH_PJJG" nameCN="段后_判决结果">
+		<searchers>
+			<searcher>
+				<pattern>\#判决内容\#([\s\S]*)$</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="SJFY" nameCN="上级法院" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>如不服本(?:判决|裁定).*(?:通过本院或者直接向|上诉于)(.+法院)(?:提出上诉)?</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 本院认为 -->
+	<parser name="PJFX" nameCN="判决分析部分" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:本院经?(?:复核)?(?:审理)?(?:审查)?(?:再审)?认为)[，：]?([\s\S]*?)(?:(?:综上所述|据此)?，?(?:本院)?(?:根据|依[据照])《[^《》]+?(?:法|条例|解释|规则|决定|条例|决议|〉|案|通则|规定|）|通知)》.+)(?:(?:(?:裁定|判决)如下)[：:，\n])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 证据情况 -->
+	<parser name="ZJQK" nameCN="证据" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(认定)?(上述|以上)事实[\s\S]*?(?=\n\#本院认为\#)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 犯罪事实 -->
+	<parser name="FZSS" nameCN="犯罪事实" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:本院)?经(?:审理|再审)查明，?([\s\S]+?)(?=\n(?:认定)?(?:上述|以上)事实)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!--审判组织成员-->
+	<parser name="SPZZ" nameCN="审判组织">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="SPCY" nameCN="审判组织成员" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>\n\#审判人员角色（不含书记员）\#(.{0,10})(?:（代）)?</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 书记员 -->
+	<parser name="SJY" nameCN="书记员" keepValue="true">
+		<searchers>
+			<searcher> 
+				<pattern>(?&lt;=\n)(?:(?:(?:(?:代|代理)?(?:书记|速录))员)[：:]?(.{0,10})(?:（代）)?(?:\n|$))+</pattern>				
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 诉讼地位 -->
+	<parser name="DLDSR" nameCN="段_当事人落">
+		<searchers>
+			<searcher>
+				<patternid>段_当事人</patternid>
+				<result>$6</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="GSKSJG" nameCN="公诉抗诉机关" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n)(?:原?[一二]?审?[公抗]诉机关(?:（原[一二]?审?[公抗]诉机关）)?)[，：]?(.+?)(?=。|\n|$)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWMC" nameCN="诉讼地位_民初" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_民初\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWMF" nameCN="诉讼地位_民终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_民终\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWMZ" nameCN="诉讼地位_民再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_民再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWXC" nameCN="诉讼地位_刑初" keepValue='true'>
+				<searchers>
+					<!--<searcher>
+						<pattern>\#称谓_民诉人_刑\#[：:]?([^，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>-->
+					<searcher>
+						<pattern>(\#地位_自诉人_刑初\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_民诉人_刑初\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_被告人_刑初\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWXF" nameCN="诉讼地位_刑终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_自诉人_刑终\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_民诉人_刑终\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_被告人_刑终\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWXZ" nameCN="诉讼地位_刑再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_申请人_刑再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_关系人_刑再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_自诉人_刑再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_民诉人_刑再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(\#地位_被告人_刑再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWZC" nameCN="诉讼地位_行初" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_行初\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWZF" nameCN="诉讼地位_行终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_行终\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWZZ" nameCN="诉讼地位_行再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>(\#地位_当事人_行再\#(?:[（(]兼[^()（）]*?[)）])?)[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCMC" nameCN="当事人名称_民初" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_当事人_民初\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$3</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCMF" nameCN="当事人名称_民终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_当事人_民终\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCMZ" nameCN="当事人名称_民再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_当事人_民再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCXC" nameCN="当事人名称_刑初" keepValue='true'>
+				<searchers>	
+					<!--<searcher>
+						<pattern>\#称谓_民诉人_刑\#[：:]?([^，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>-->
+					<searcher>
+						<pattern>\#地位_自诉人_刑初\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_民诉人_刑初\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_被告人_刑初\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCXF" nameCN="当事人名称_刑终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_自诉人_刑终\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_民诉人_刑终\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_被告人_刑终\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCXZ" nameCN="当事人名称_刑再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_申请人_刑再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_关系人_刑再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_自诉人_刑再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_民诉人_刑再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>\#地位_被告人_刑再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCZC" nameCN="当事人名称_行初" keepValue='true'>
+				<searchers>	
+					<searcher>
+						<pattern>\#地位_当事人_行初\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCZF" nameCN="当事人名称_行终" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_当事人_行终\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCZZ" nameCN="当事人名称_行再" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>\#地位_当事人_行再\#(?:[（(]兼[^()（）]*?[)）])?[：:]?([^（，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="SSDWQ" nameCN="诉讼地位_其他" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>((?:指定|委托)?辩护人(?:暨(?:(?:附带民事)?诉讼|委托)代理人)?)[：:]?([^（）()，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>((?:(?:指定|委托)?辩护人暨)?(?:(?:附带民事)?诉讼|委托)?代理人)[：:]?([^（）()，。：；,.;\n]+)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="DSRMCQ" nameCN="当事人名称_其他" keepValue='true'>
+				<searchers>
+					<searcher>
+						<pattern>((?:指定|委托)?辩护人(?:暨(?:(?:附带民事)?诉讼|委托)代理人)?)[：:]?([^（）()，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+					<searcher>
+						<pattern>((?:(?:指定|委托)?辩护人暨)?(?:(?:附带民事)?诉讼|委托)?代理人)[：:]?([^（）()，。：；,.;\n]+)</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>	
+</parsers>

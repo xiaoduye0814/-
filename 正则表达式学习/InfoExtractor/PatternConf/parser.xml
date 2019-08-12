@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!-- 案号 -->
+	<parser name="AH" nameCN="案号" keepValue="true">
+		<searchers>
+			<!-- 检时间在案号中间。检2时间在案号开始部分-->
+			<searcher>
+				<patternid>段_案号_检</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号_检2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 检察院名称，为了程序统一用法院表示代替 -->
+	<parser name="JBFY" nameCN="法院" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_检院名称</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--段当事人-->
+	<!--起诉、不起诉-->
+	<parser name="QSSDSR" nameCN="起诉书当事人段">
+		<searchers>
+			<searcher>
+				<patternid>起诉书_段_当事人</patternid>
+				<result>$4</result>
+			</searcher>
+			<searcher>
+				<pattern>(?:犯罪嫌疑人基本情况)([\s\S]+?)(?:(?:发|立|破)案经过)</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<pattern>(被?申诉人|[原一]审[原被]告)[:：]?(.+?。[\n]+?)((?:委托|[法指]定|诉讼)代[理表]人：?(.+?)[。$]\n?){0,4}</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="QSSDSRB" nameCN="命体候选">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)(?:被(?:告|不起诉)人(.+?)(?=[，,）]|\n|$))</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:^|\n)(?:被(?:告|不起诉)单位[：:（]?)([^，。,、]+?)(?=[，,）])</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>(?&lt;=犯罪嫌疑人)[^，。,、]+</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>(被?申诉人|[原一]审[原被]告)[:：]?(.+?。[\n]+?)</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>(?:委托|[法指]定|诉讼)代[理表]人：?(.+?)[。$]\n?</pattern>
+						<result>$0</result>
+					</searcher>
+					<!--其它姓名-->
+					<searcher>
+						<pattern>英文姓?名：?([A-Za-z·. ]{2,}(?:[、，][A-Za-z·. ]{2,})*)</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>[（，]\#别名\#[，）]</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>[（，]\#绰号\#[，）]</pattern>
+						<result>$1</result>
+					</searcher>
+					<!--诉讼参与人姓名-->
+					<searcher>
+						<pattern>\n法定代表人(.+?)，(.+)。</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>\n法定代理人(?:暨(?:原审)?\#称谓_民诉人_刑\#)?(.*?)\#括号内说明\#?，.*</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<patternid>行_诉理人</patternid>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser nameCN="命体" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>(（.+）|人)?([^、]+)</pattern>
+								<result>$2</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<parser name="DZ" nameCN="地址" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:原籍|户[口籍])(?!记载)(?:所在)?地?[：为在]?(\#地址模板\#+?)[，；。）\n]</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>[，。（](?:捕前|现)?[暂租家]?住(?:[地址于在]|所地)?(\#地址模板\#+\#地址\#\#地址模板\#*?)[，；：。（）]</pattern>
+						<result>$1</result>
+					</searcher>
+					<searcher>
+						<pattern>出?生[地于](\#地址模板\#+\#地址\#)[，；。（）]</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<parser name="KLJC" nameCN="可能命体">
+		<searchers>
+			<searcher>
+				<pattern>[下(（]简称[：:]?(.+?)[，。（）()]</pattern>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<pattern>[以，（]下称[：:]?(.+?)[，。（）()]</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="JC" nameCN="命体" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>[^“”]+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!--法律法规-->
+	<parser name="SMH" nameCN="书名号中内容">
+		<searchers>
+			<searcher>
+				<pattern>(?:《)(.+?)(?:([（(]试行[）)])?》)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="FLFG" nameCN="法律法规" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>.*[^办](法|条例|通则|规定|细则)$</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>.*关于.+(规定|解释|意见|通知)()?$</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!--案由-->
+	<parser name="ZM" nameCN="案由" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[^罪]犯|构成|涉嫌|以)([^《》。、，罪判犯之认]{2,}?)(?:(等[^，。、]+)?罪[^犯])</pattern>
+				<result>$1</result>
+				<post>罪</post>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--日期-->
+	<parser name="RQ" nameCN="日期" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--年月日-->
+				<pattern>((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2}|[同当今次每])年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<!--年月-->
+				<pattern>(((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2}|[同当今次每])年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})月份?)(?!([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日)</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<!--月日-->
+				<pattern>(?&lt;!年|[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０])([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3}|[同当次每])月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<!--年-->
+				<pattern>((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2}|[同当今次每])年(?!(([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3}))月)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+</parsers>

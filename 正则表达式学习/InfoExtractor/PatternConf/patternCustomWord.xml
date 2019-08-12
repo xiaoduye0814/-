@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pattern>
+  <!-- 模式资源引用 -->
+  <include file="Ext_PatternCustomWord_Common"/>
+  <include file="Ext_PatternCustomWord_com_XS"/>
+  <include file="Ext_PatternCustomWord_com_MS"/>
+</pattern>

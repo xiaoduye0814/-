@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+	<!--日期-->
+	<!-- 这里黑马校对服务也对日期进行了校对，方便修改就去掉通用规则中的日期校对 -->
+	<parser name="RQ" nameCN="日期" keepValue="true">
+		<searchers>
+			<!-- 年月日或年月，包括错误年年日日 -->
+			<searcher>
+				<pattern>([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]*|.)年+((\d+|[一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]+|))月((?=[一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０][天起])|(?=\d*时)|(\d+(、\d+)?|[一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]+(、[一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]+)?|)日*)?</pattern>
+				<result>$0</result>
+			</searcher>
+			<!-- 月日，包括错误日日 -->
+			<searcher>
+				<pattern>(?&lt;!年|个|[\d一壹元二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０])([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*|.)月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日+(?![\d一壹元二贰三叁四肆五伍六陆七柒八捌九玖十拾百千][元角分])</pattern>
+				<result>$0</result>
+			</searcher>
+			<!-- 错误表述月月日 -->
+			<searcher>
+				<pattern>月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日</pattern>
+				<result>$0</result>
+			</searcher>
+			<!-- 错误表述年日 -->
+			<searcher>
+				<pattern>([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]*|.)年+(([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)日)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser> 
+	<!--时间 add by lij-->
+	<parser name="SJ" nameCN="时间" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--时间：点(时)或点分或点分秒或点秒 包括错误时时 点点 分分 秒秒 -->
+				<pattern>(凌晨|黎明|拂晓|早晨|早上|早|上午|中午|下午|傍晚|黄昏|晚上|晚|午夜|夜间|深夜|夜)?([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*[时|点|点半]+)+([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*分+)?([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*秒+)?(许|左右|多钟|多|钟)?(?![\d一壹元二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０百佰千仟万亿]+[元角分年月日天平米厘升豪尺寸]|[内后止前上起])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!--没填写的内容  …{2,}| 取消 by lij -->
+	<parser name="MTLR" nameCN="没填内容" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>×{2,}|x{2,}|X{2,}|\*{2,}</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 连续标点 -->
+	<parser name="LXBD" nameCN="连续标点" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>([，。；、：？！]{2,})</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 金额阿拉伯数字 -->
+	<parser name="JEALBSZ" nameCN="金额阿拉伯数字" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[\d.]+[多万亿]*美?元</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>	
+	<!-- 金额中文数字 -->
+	<parser name="JEZWSZ" nameCN="金额中文数字" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[〇零一二两三四五六七八九十][〇零一二三四五六七八九十百千万亿点多]*美?元</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+
+	<!-- 句内括号"。）"错误 -->
+	<parser name="JNKHX" nameCN="句内括号" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=(?:[^\n。？！…]))[(（][^)）]+?(.{1}[，。；、：][\)）])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="SFZHM" nameCN="身份证号码" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;!香港|澳门|台湾)身份证件?[：:，,（(]?([编]?号码?|[：:（(]|\d{5})[：:，,（( 为是]*\d+[Xx]?</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="QJSZ" nameCN="全角数字" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[１２３４５６７８９０]+</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 序号 -->
+	<parser name="KLXH" nameCN="可能序号" keepValue="false">
+		<searchers>
+			<searcher>
+				<!--分行序号-->
+				<pattern>(?&lt;=\n)[（]?[\d一二三四五六七八九十]{1,3}[）、].+?(?=[；。，：:,;（）?？\n]|$)|(?&lt;=[；。，：:,;“）?？])[（]?[1一][）、].+?(?=\n[（]?[2二][）、])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="FHZWXH1" nameCN="分行中文序号一" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^[一二三四五六七八九十]+、.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="FHZWXH2" nameCN="分行中文序号二" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^（[一二三四五六七八九十]+）.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="FHSZXH1" nameCN="分行数字序号一" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^[\d]+、.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="FHSZXH2" nameCN="分行数字序号二" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^（[\d]+）.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<parser name="KLXH" nameCN="同段序号" keepValue="false">
+		<searchers>
+			<searcher>
+				<!-- 同段序号 -->
+				<pattern>(?&lt;=[；。，：:,;”）?？])[（]?[\d一二三四五六七八九十]{1,3}[）、].+?(?=[；。，：:,;（）？?\n]|$)|(?&lt;=[\n])[（]?[1一][）、].+?(?=[；。，：:,;“）?？][（]?[2二][）、])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="TDZWXH1" nameCN="同段中文序号一" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^[一二三四五六七八九十]+、.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="TDZWXH2" nameCN="同段中文序号二" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^（[一二三四五六七八九十]+）.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="TDSZXH1" nameCN="同段数字序号一" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^[\d]+、.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="TDSZXH2" nameCN="同段数字序号二" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>^（[\d]+）.+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<parser name="LXXH" nameCN="连续序号" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>([\d一二三四五六七八九十]+)、(\1、)+</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<pattern>(（[\d一二三四五六七八九十]+）)、?(\1、?)+</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!--
+	<parser name="DDHJE" nameCN="带顿号数字金额" keepValue="true">       
+		<searchers>
+			<searcher>
+				<pattern>(\d+、\d+)[多万亿]*美?元</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	-->
+	<!--没填写的内容-->
+	<!--
+	<parser name="RQQJBGF" nameCN="日期区间不规范" keepValue="true">   
+		<searchers>
+			<searcher>
+				<pattern>之日起[一二三四五六七八九十]+[日](、[一二三四五六七八九十]+[日])*+(?![之以]?[内后止前上起]).</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<pattern>判决生效后[一二三四五六七八九十]+[日](?![之以]?[内止]).</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	-->
+	<!--嵌套书名号内单书名号的错误表述-->
+	<parser name="DSMH" nameCN="单书名号错误表述" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--<pattern>《[^＜&lt;]+?([＜&lt;].+?[＞&gt;])?[^＜&gt;]+?》</pattern>-->
+				<!--已在半角标点错误提示中将半角小于号大于号对应到单书名号了-->
+				<pattern>《[^＜《＞》]+?(＜.+?＞)[^＜《＞》]+?》</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!--文书正文-->
+	<parser name="ZW" nameCN="正文" keepValue="false">
+		<searchers>
+			<searcher>
+				<pattern>.*[,，。：；？！].*</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="MWWBD" nameCN="末尾无标点" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>.{15,45}[^。.：:；;，,”"）)…？?！!](?:\n|$)</pattern>
+						<result>$0</result>
+						<!--<post>^p</post>-->
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+
+	<!-- 年龄未写岁 -->
+		<parser name="NLWXS" nameCN="年龄未写岁" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:年龄[：:]?)([\d一二三四五六七八九十百零]{1,5})(?:[，。 ）（])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+
+	<!-- 重复段落 -->
+	<parser name="CFDL" nameCN="重复段落" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(((?&lt;=^|\n).+?)\n)(\2\n)+</pattern>
+				<result>$2</result>
+			</searcher>
+		</searchers>
+	</parser>
+</parsers>

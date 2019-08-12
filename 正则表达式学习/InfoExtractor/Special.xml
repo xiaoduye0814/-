@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parsers>
+		
+	<!-- 法律法规 -->
+	<parser name="QBYYTW" nameCN="全部引用条文" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--<pattern>(?&lt;=(?:根据|依[据照]))《[^《》]+?[^办]法》.+?(?=(?:(?:(?:判决|裁定|协议)如下|[如以]下(?:调解)?协议)[：:，\n]))</pattern> -->
+				<!--<pattern>(?&lt;=(?:根据|依[据照]))《[^《》]+?(?:法|条例|解释|规则|决定|条例|决议|〉|案|通则|规定|）|通知)》.+?(?=[：:。\n])</pattern> -->
+				<pattern>(?&lt;=(?:根据|依[据照]|触犯))了?《[^《》]+?(?:法|条例|解释|规则|决定|条例|决议|〉|案|通则|规定|）|通知|意见|[细守]则|解答|[纪纲]要|[报公]告|复函|[答批]复|函|标准|说明|建议|规范|规程)》.+?(?=[：:。\n])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="YYDGFL" nameCN="引用单个法律" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(《[^《》]+?(《.+?》)?[^《》]+?》)?(第?([\d〇零一二三四五六七八九十百千（）()、xX*]+(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="YYDGFLTKXCW" nameCN="引用单个法律条款项错误" keepValue="true">  <!--条款项前无数字，或者数字写法错误（word中插入的符号、全角等字符）-->
+				<searchers>
+					<searcher>
+						<pattern>(《[^《》]+?(《.+?》)?[^《》]+?》)(第([\d〇零一二三四五六七八九十百千（）()、]{1,5}(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)*(第([^\d〇零一二三四五六七八九十百千（）()、]{0,5}(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<parser name="BDKHX" nameCN="引用法律条文不带括号项" keepValue="true">
+		<searchers>
+			<searcher>
+				<!--<pattern>(?&lt;=(?:根据|依[据照]|触犯))[^。]{0,100}《[^《》]+?(?:法|条例|解释|规则|决定|条例|决议|〉|案|通则|规定|）|通知)》[^。；，\n]+?(第[\d一二三四五六七八九十百]+?项)</pattern> -->
+				<pattern>(?&lt;=(?:根据|依[据照]|触犯))了?[^。]{0,100}《[^《》]+?(?:法|条例|解释|规则|决定|条例|决议|〉|案|通则|规定|）|通知|意见|[细守]则|解答|[纪纲]要|[报公]告|复函|[答批]复|函|标准|说明|建议|规范|规程)》[^。；，\n]+?(第[\d一二三四五六七八九十百]+?项)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+<!--文书结构 Start -->
+
+<!-- 检察院名称 -->
+	<parser name="JCYMC" nameCN="检察院名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_检院名称</patternid>
+				<result>$1</result>
+			</searcher>					
+		</searchers>
+	</parser>
+	
+	<!-- 文书编号 -->
+	<parser name="WH" nameCN="文号" keepValue="true">
+		<searchers>
+			<!-- 检时间在案号中间。检2时间在案号开始部分 -->
+			<searcher>
+				<patternid>段_案号_检</patternid>
+				<result>$1</result>
+			</searcher>
+			<searcher>
+				<patternid>段_案号_检2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+
+	<!-- 文书名称 -->
+	<parser name="WSMC" nameCN="文书名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<patternid>段_文书名称</patternid>
+				<result>$1</result>
+			</searcher>
+			<!-- 个别文书名称出现在头部表格中的，由文本提取步骤将之迁移到了尾部…… -->			
+			<searcher>
+				<patternid>段_文书名称2</patternid>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 文书日期 -->
+	<parser name="MWJH" nameCN="末尾几行">
+		<searchers>
+			<searcher>
+				<patternid>范围_末几行</patternid>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="WSRQ" nameCN="文书日期" keepValue="true">
+				<searchers>
+					<!-- 年月日 -->
+					<searcher>
+					<pattern>(?&lt;=\n)((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2})年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{0,3})月([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{0,3})日(?=\n)</pattern>
+						<result>$0</result>
+					</searcher>
+					<!-- 年月 -->
+					<searcher>
+					<pattern>(?&lt;=\n)(((?:[1一壹][8八捌9九玖]|[2二贰][?0零〇○OoＯｏΟοОо０一壹])?[\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]{2})年([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})月份?)(?!([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]{1,3})日)(?=\n)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+		
+	<!-- 起诉书当事人 (?&lt;=\n)(被告(?:人|单位)).*(?:\n) -->
+	<parser name="QSSDSR" nameCN="起诉书当事人段">
+		<searchers>
+			<searcher>
+				<patternid>起诉书_段_当事人</patternid>
+				<result>$4</result>
+				<!--<pattern>(?&lt;=\n)(被告(?:人|单位)).*(?:\n)</pattern>
+				<result>$0</result> -->
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="QSSDSRB" nameCN="起诉书当事人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)(((?:被(?:告|不起诉)单位[：:（]?)([^，。,、]*?)(?:（以下简称.+?)?(?=[，,）])[\s\S]*?(?=\n被|$))|(被(?:告|不起诉)人[\s\S]+?(?=\n被|\n(以上|上列).{1,2}被告|$))|(?:[\d一二三四五六七八九十]+、)(?:被(?:告|不起诉)(?:人|单位)[：:（]?)[\s\S]*?(?=\n(?:[\d一二三四五六七八九十]+、)被|$))</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="BQSSDSRB" nameCN="不起诉书当事人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)(((?:被(?:告|不起诉)单位[：:（]?)([^，。,、]*?)(?:（以下简称.+?)?(?=[，,）])[\s\S]*?(?=\n被|$))|(被(?:告|不起诉)人[\s\S]+?(?=\n被|\n(以上|上列).{1,2}被告|$))|(?:[\d一二三四五六七八九十]+、)(?:被(?:告|不起诉)(?:人|单位)[：:（]?)[\s\S]*?(?=\n(?:[\d一二三四五六七八九十]+、)被|$))</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 起诉书当事人段后 -->
+	<parser name="QSSDSRDH" nameCN="起诉书当事人段后" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?=\n.*?(?:本案由|侦查终结|审查起诉))[\s\S]+?(?=此致|$)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 起诉书案由 -->
+	<parser name="QSSAY" nameCN="起诉书案由" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(本案由.{2,40}(?:被告|被不起诉)(?:人|单位).{1,}涉嫌.*)|((?:被告|被不起诉)(?:人|单位).{1,}涉嫌.{2,20}[由经].{2,}侦查终结.*)(?:\n)|(.*侦查终结[\s\S]+?(?:经(?:本院)?(?:依法)?审[查理]))</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="QSSAYZM" nameCN="起诉书案由罪名" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|[\n，。；])([^。，；\n]*?)(?:(?&lt;=涉嫌)犯?([^,，；。]+[^数犯](?=罪|一案))+).+?(?=$|[\n。，；：])</pattern>
+						<result>$2</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="QSSZCDW" nameCN="起诉书侦查单位" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=由)[^。，,]+?(?=侦查终结)|(?&lt;=由)本院(?=侦查终结)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="QSSSARQ" nameCN="起诉书收案日期" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:本案由[^。，,]+?侦查终结.+?于)(([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]*|.)年+([\d一壹元二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)月?([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)日?)(?=(.*)审查起诉)</pattern>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="QSSSBCZCD" nameCN="起诉书补充侦查_段" keepValue="false">
+				<searchers>
+					<searcher>
+						<pattern>[^\r\n]+退回[^\r\n。]{0,15}补充侦查[^\r\n]+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSSYCSCQS" nameCN="起诉书补充侦查" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>[^。]+退回[^\r\n。]{0,15}补充侦查[^。]+</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+			<parser name="QSSSYCSCQSD" nameCN="起诉书延长审查起诉_段" keepValue="false">
+				<searchers>
+					<searcher>
+						<pattern>[^\r\n]*延长(?:案件)?审[查理](?:起诉)?[审期]限[^\r\n]*</pattern>
+						<result>$0</result>
+					</searcher>
+					<searcher>
+						<pattern>[^\r\n]*延长(?:案件)?审[查理]起诉(?![审期]限)[^\r\n]*</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+				<parsers>
+					<parser name="QSSSYCSCQS" nameCN="起诉书延长审查起诉" keepValue="true">
+						<searchers>
+							<searcher>
+								<pattern>[^。]*延长(?:案件)?审[查理](?:起诉)?[审期]限[^。]*</pattern>
+								<result>$0</result>
+							</searcher>
+							<searcher>
+								<pattern>[^。]*延长(?:案件)?审[查理]起诉(?![审期]限)[^。]*</pattern>
+								<result>$0</result>
+							</searcher>
+						</searchers>
+					</parser>
+				</parsers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<!-- 起诉书案件事实 -->
+	<parser name="QSSAY" nameCN="起诉书案件事实" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>((?:。|经(?:本院)?(?:依法)?审[查理]，?)现?查明.{0,10})[\s\S]+?(?=认定上述事实的证据|上述事实|本院认为)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 起诉书证据 -->
+	<parser name="QSSAY" nameCN="起诉书证据" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(认定上述(?:犯罪)?事实的证据(?:有|如下|：)|上述事实)[\s\S]+?(?:本院认为|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 起诉书本院认为 -->
+	<parser name="QSSQSDL" nameCN="起诉书起诉段落" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)((?:本院|(?:经过?(?:复核)?审[查理]，|本案经过?)本院|本院经过?(?:复核)?审[查理]，?)认为.+提起公诉，请依法(?:(?:判|惩)处|[裁审]判).*)(?:\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="QSSCFFL" nameCN="起诉书触犯法律" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=触犯)(?:了)?《[^《》]+?》(第?([\d〇零一二三四五六七八九十百千（）()、]+(?:条(?:之[一二])?|[款项目]))[的、，。；,;（）之以及和]*)+</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<parser name="QSSQSZM" nameCN="起诉书起诉罪名" keepValue="true">
+				<searchers>
+					<searcher>
+						<!--<pattern>(?&lt;=应当以)[^，。]+(?=罪)</pattern>  构成了? -->
+						<patternid>多个罪名</patternid>
+						<result>$1</result>
+					</searcher>
+				</searchers>
+			</parser>
+			<!-- 起诉书引用法条 -->
+			
+			<parser name="QSSYYFT" nameCN="起诉书引用法条" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第(?:一百七十二|172)条.+?(?=(?:[：:，\n]))</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	
+	
+	<!-- 不起诉书案件事实 -->
+	
+	<parser name="BQSSAJSS" nameCN="不起诉书案件事实" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>((。|经(?:本院)?(?:依法)?审[查理][，后]?)现?查明.{0,10})[\s\S]+?(?:上述事实|本院认为|被害(?:人|单位)[^，。]*?如果?不服本决定)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 不起诉书理由 -->
+	<parser name="BQSSLY" nameCN="不起诉书理由" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n).+?决定对.+?不予?起诉(?=[。，\n])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 不起诉书告知事项 -->
+	<parser name="BQSSGZSX" nameCN="不起诉书告知事项" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:^|\n)被(?:害|不起诉)(?:人|单位)([^。]*?)(?:若|如果?)不服从?本决定.+?(?=[。\n])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 不起诉书引用法条 -->
+	<parser name="BQSSYYFT" nameCN="不起诉书须引用法条" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第((?:一百七十一|171)条第[四4]款|(?:一百七十三|173)条第[一二12]款|(?:十五|15)条第[一二三四五六123456]款).+?(?=(?:[：:，\n]))</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="BQSSCYBS" nameCN="不起诉书存疑不诉" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=(?:根据|依[据照]))[^。]*?《中华人民共和国刑事诉讼法》[^《》]*?第((?:一百七十一|171)条第[四4]款).+?(?=(?:[：:，\n]))</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 审查逮捕意见书受案情况 -->
+	<parser name="SCDBSAQK" nameCN="审查逮捕意见书受案情况" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:\n|^).+?审查完毕(?=[。\n])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="SCDBSAQK" nameCN="审查逮捕意见书犯罪嫌疑人" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:犯罪嫌疑人的?基本情况)([\s\S]+?)(?:[发立破]案经过|(?:经审查认定的案件事实[及和]证|审查后认定的犯罪事实[及和]证|对案件事实的认定[及和]证)|需要说明的问题|应说明问题|处理意见|承办人意见)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="QSSDSRB" nameCN="审查逮捕当事人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;=^|\n).{0,5}(犯罪嫌疑人[\s\S]+?)(?=犯罪嫌疑人|$)</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>			
+		</parsers>
+	</parser>
+	
+	<parser name="SCDBFALAPA" nameCN="审查逮捕意见书发案立案破案经过" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[发立破]案经过[：:\n]+)([\s\S]+?)(?=(?:经审查认定的案件事实[及和]证|对案件事实的认定[及和]证|审查后认定的犯罪事实[及和]证|需要说明的问题|应说明问题|处理意见|承办人意见))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="SCDBAJSS" nameCN="审查逮捕意见书经审查认定的案件事实及证据" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[三四]、(?:经?审查后?认定的(?:案件|犯罪)事实[及和]证|对案件事实的认定[及和]证))([\s\S]+?)(?=需要说明的问题|应说明问题|处理意见|承办人意见)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="SCDBSM" nameCN="审查逮捕意见书需要说明的问题" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[四五]、.*?需要说明的问题|应说明问题)([\s\S]+?)(?=(?:[五六]、处理意见|承办人意见)|承办人[^意])</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="SCDBSM" nameCN="审查逮捕意见书处理意见" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:[四五六]、(?:处理意见(?:及法律依据)?|承办人意见))([\s\S]+?)(?=承办人[^意]|$)</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="SCDBYYFT" nameCN="审查逮捕意见书须引用法条" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>《中华人民共和国刑事诉讼法》[^《》。]*?第(?:六十|60|六十八|68)条(?:第(?:一|1)款)?.*?(?=[，。\n])</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+	<parser name="XKCPQK" nameCN="刑事抗诉书裁判情况" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:^|\n|。).{2,30}法院(?:.{1,5}分院)?(?:于.+?)?以(.+?)(?:刑事(?:附带民事)?(?:判决|裁定)书)?[\s\S]+?(?=(?:本院)?(?:依法)?审查后?认为|理由如下|综上(?:所述)?|请依法判处|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="XKSCYJ" nameCN="刑事抗诉书审查意见" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:经?本院)?(?:依法)?审查后?认为[\s\S]+?(?=理由如下|综上(?:所述)?|请依法判处|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="XKKSLY" nameCN="刑事抗诉书抗诉理由" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:理由如下)[\s\S]+?(?=综上(?:所述)?|请依法判处|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="XKJL" nameCN="刑事抗诉书结论" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:综上(?:所述|，)?)([\s\S]+?)(?:请依法(?:判处|改判)|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="TKXQY" nameCN="提请抗诉报告书刑起因" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>本院(?:于)?(([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖?零〇○OoＯｏΟοОо０]*|.)年+([\d一壹元二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)月?([\d一壹二贰三叁四肆五伍六陆七柒八捌九玖十拾零〇○OoＯｏΟοОо０]*)日?)收到.+?经本院审查认为</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="TKXTQSX" nameCN="提请抗诉报告书刑提请事项" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>为保证法律的统一正确实施，特提请你院通过审判监督程序对此案提出抗诉</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="MXAJLY" nameCN="民行案件来源" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>((?:.+?因(?:.+?一案，?)?不服(.{2,20}人民法院|.+提出抗诉申请))|(?:我院对.{2,20}人民法院对.+?案)|(?:我院受理.+?的申诉后，对.{2,20}人民法院)).+?(?=\n|$)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="TKMXLY" nameCN="提请抗诉报告书民行理由" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:本院经审查认为|综上(?:所述)?|基于上述理由).+?提出抗诉</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<parser name="TKMXDSRD" nameCN="提请抗诉报告书民行当事人段" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:当事人的?基本情况)[\s\S]+?(?=法院裁判情况|审查认定的案件事实|申诉人申诉理由|审查结论|综上所述|此致)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="TKMXDSR" nameCN="提请抗诉报告书民行当事人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?&lt;![与和被])(被?申诉人|[原一]审[原被]告)[:：]?([^与]+?[。)）][\n]+?)((?:委托|[法指]定|诉讼)代[理表]人：?(.+?)[。$]\n?){0,4}</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	
+
+	<parser name="MXKZJ" nameCN="民事行政抗诉书总结" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:本院经审查认为|综上(?:所述)?|基于上述理由).+?提出抗诉</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<parser name="XSSSFCJDS_SSR_DUAN" nameCN="刑事申诉复查决定书申诉人段" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>刑事申诉复查决定书(?:(?:.*\n){0,5}?(?:(?:[^\n]{1,4})检(?:\.?分)?(?:.{1,10})(?:[\[(（［〔【]\d{4}[\])）］】〕]|\d{4})年?第?[\[(（［〔【]?(?:(?:\d{1,4}[－\-—])|(?:\d{1,4}、)+)?\d{1,4}[\])）］】〕]?[号）])\n)?([\s\S]+?)(?=\n.*?(?:向本院(?:提[出起])?(?:[刑民]事|行政)?申诉))</pattern>
+				<result>$1</result>
+			</searcher>
+		</searchers>
+		<parsers>
+			<parser name="XSSSFCJDS_SSR" nameCN="刑事申诉复查决定书申诉人" keepValue="true">
+				<searchers>
+					<searcher>
+						<pattern>(?:^|\n)(((?:申诉单位[：:（]?)([^，。,、]*?)(?:（以下简称.+?)?(?=[，,）])[\s\S]*?(?=\n[被申原]|$))|(申诉人[\s\S]+?(?=\n[被申原]|\n(以上|上列).{1,2}申诉|$))|(?:[\d一二三四五六七八九十]+、)(?:申诉(?:人|单位)[：:（]?)[\s\S]*?(?=\n(?:[\d一二三四五六七八九十]+、)被|$))</pattern>
+						<result>$0</result>
+					</searcher>
+				</searchers>
+			</parser>
+		</parsers>
+	</parser>
+	<!-- 刑事申诉复查决定书案由和案件来源 -->
+	<parser name="XSSSFCJDS_AJLY" nameCN="刑事申诉复查决定书案由和案件来源" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(.*向本院(?:提出)?(?:[刑民]事|行政)?申诉)(?:.*?\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 刑事申诉复查决定书申诉理由和请求 -->
+	<parser name="XSSSFCJDS_SSLY" nameCN="刑事申诉复查决定书申诉理由和请求" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(.*向本院(?:提出)?(?:[刑民]事|行政)?申诉)(?:.*?\n)</pattern>
+				<result>$0</result>
+			</searcher>
+			<searcher>
+				<pattern>(?&lt;=\n)(申诉理由和请求.*)(?:\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 刑事申诉复查决定书本院认为 -->
+	<parser name="XSSSFCJDS_RDSS" nameCN="刑事申诉复查决定书认定事实" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(本院复查(?:查明|认为).*)(?:\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 刑事申诉复查决定书决定 -->
+	<parser name="XSSSFCJDS_JUEDING" nameCN="刑事申诉复查决定书决定" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=\n)(本院决定.*)(?:\n)</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+
+<!-- 文书结构 End -->
+
+	<!-- 承办人 -->
+	<parser name="CBR" nameCN="承办人" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=^|\n)((?:[(（]?[代助]理[)）]?)?检察员|副?检察长|承办人)(?!意见|签字).{2,}</pattern> <!--|代?书记员-->
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 法院名称 -->
+	<parser name="FYMC" nameCN="法院名称" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=此致\n).{2,}法院</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	
+	<!-- 全文 -->
+	<parser name="QW" nameCN="全文" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>[\s\S]*</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 连词重复 -->
+	<parser name="LCCF" nameCN="连词重复" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>([、]|或者?|以及){2,}</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 提请单位 -->
+	<parser name="TQDW" nameCN="提请单位" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?:(?&lt;=此致\n).{2,}院)|((?&lt;=^|\n).{6,20}院[：:])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<!-- 提请单位 -->
+	<parser name="TQDW" nameCN="法人信息" keepValue="true">
+		<searchers>
+			<searcher>
+				<pattern>(?&lt;=[\n，。：；、])法人(.{0,20})(?=[，。：；、\n])</pattern>
+				<result>$0</result>
+			</searcher>
+		</searchers>
+	</parser>
+	<include file="Ext_AntiCorruptionChecker"/>
+</parsers>
