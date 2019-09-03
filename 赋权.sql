@@ -25,3 +25,17 @@ grant select  on table pythondata.t_qsxx to api;
 grant select  on table pythondata.yuliu_t_qsxx to api;
 grant select  on table pythondata.yuliu_t_qsxx01 to api;
 grant select  on table pythondata.z_qsxx_002 to api;
+
+-- 创建应用用户，并赋予相关库的DML操作权限
+create role jcyclsz encrypted password 'jcyclszdbuserlogin' nosuperuser nocreatedb nocreaterole inherit login;
+
+grant all privileges on all tables in schema db_ssclsz to jcyclsz;
+grant all  on  schema  db_ssclsz to jcyclsz;
+
+grant all privileges on all tables in schema public to jcyclsz;
+grant all  on  schema  public to jcyclsz;
+
+grant all privileges on all tables in schema Artery to jcyclsz;
+grant all  on  schema  Artery to jcyclsz;
+
+alter role jcyclsz set search_path to public, Artery, db_ssclsz;
