@@ -1,0 +1,26 @@
+1、删除 rm -rf 文件夹 
+2、复制服务器文件到本地
+	lct C:/aaa
+	get * 
+3、端口占用
+	netstat -ano|grep 8080
+	netstat -lnp | grep 8080
+	kill -9 12387
+4、设置tcp内核参数并发量
+	vim /etc/sysctl.conf
+	增加 net.core.somaxconn=2048
+	sysctl -p
+5、查看文件
+	more 文件名
+6、查看tomcat
+	 ps -ef |grep tomcat
+
+7、windows:
+	netstat -aon|findstr 8080 
+	taskkill -PID 2312 -F
+	
+8、编码：set ff=unix
+
+9、 cat /etc/redhat-release 版本信息
+
+E:/11-文件收发柜/二维码内外网传输/外网/源码/qrcodeww
